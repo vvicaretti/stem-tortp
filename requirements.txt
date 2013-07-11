@@ -1,2 +1,1 @@
-python-notify2
-python-iptables
+stem==1.0.1
