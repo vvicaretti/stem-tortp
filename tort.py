@@ -22,6 +22,7 @@ import stem.process
 from shutil import copy2
 import sys
 
+# setting the process name
 stem.util.system.set_process_name("TORtp")
 
 def notify(title, message):
@@ -92,6 +93,7 @@ def enable_dns_torify(tortpdir):
          controller.set_options({"DNSPort": "9053", "AutomapHostsOnResolve": "1"})
          notify("TORtp", "Tor DNS enabled")
    except stem.SocketError:
+      # WRONG: launch new tor process as a debian-tor and not as root
       stem.process.launch_tor_with_config(config = {'ControlPort': '9051', 'CookieAuthentication': '1'},)
       with Controller.from_port(port = 9051) as controller:
          controller.authenticate()
@@ -105,6 +107,7 @@ def enable_torproxy():
          controller.set_options({"VirtualAddrNetwork": "10.192.0.0/10", "TransPort": "9040", "TransListenAddress": "127.0.0.1","AvoidDiskWrites": "1", "WarnUnsafeSocks": "1"})
          notify("TORtp", "Tor Proxy enabled")
    except stem.SocketError:
+       # WRONG: launch new tor process as a debian-tor and not as root
        stem.process.launch_tor_with_config(config = {'ControlPort': '9051', 'CookieAuthentication': '1'},)
        with Controller.from_port(port = 9051) as controller:
           controller.authenticate()
@@ -120,6 +123,7 @@ def start(tortpdir):
 
 def stop(tortpdir):
    pass
+   # I'll have to write it
 
 def main(arg):
    parser = argparse.ArgumentParser()
@@ -134,7 +138,7 @@ def main(arg):
    if args.do != "start" and args.do != "stop":
       print 'Type "tortp.py -h" for options'
 
-   # 6. check se sto usando tor
+   # check if tor is working
 
 if __name__ == '__main__':
    main(sys.argv[1:])
