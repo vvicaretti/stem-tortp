@@ -72,7 +72,7 @@ def iptables_clean():
 
 def iptables_up(tortpdir, user):
    """ This function add iptables rules for redirect all user traffic to tortp """
-   subprocess.call('iptables-save > %s/%s' % (tortpdir, "iptables.txt"), shell=True)
+   subprocess.call('iptables-save > %s/iptables.txt' % tortpdir, shell=True)
    # Redirect DNSTor port (9053)
    subprocess.call('iptables -t nat -A OUTPUT ! -o lo -p udp -m owner --uid-owner %s -m udp --dport 53 -j REDIRECT --to-ports 9053' % user, shell=True)
    subprocess.call('iptables -t filter -A OUTPUT -p udp -m owner --uid-owner %s -m udp --dport 53 -j ACCEPT' % user, shell=True)
@@ -85,7 +85,8 @@ def iptables_up(tortpdir, user):
 
 def iptables_down(tortpdir):
    try:
-      subprocess.call('iptables-restore < %s/%s' % (tortpdir, "iptables.txt"), shell=True)
+      subprocess.call('iptables-restore < %s/iptables.txt' % tortpdir, shell=True)
+      os.remove("%s/iptables.txt" % tortpdir)
    except IOError as e:
       iptables_clean()
       print e
@@ -156,22 +157,29 @@ def start(tortpdir):
       print "Unable to connect to port 9051 (%s)" % exc
       print "Please add 'ControlPort 9051' on your /etc/tor/torrc configuration"
       sys.exit(1)
-   iptables_clean()
-   iptables_up(tortpdir, check_user())
-   enable_tordns()
-   enable_torproxy()
-   resolvconf(tortpdir)
-   dnsmasq(tortpdir)
-   subprocess.call('/etc/init.d/dnsmasq restart', shell=True)
-   notify("TORtp", "Tor Transparent Proxy enabled")
+   if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
+      print "TORtp is already running"
+      sys.exit(1)
+   else:
+      iptables_clean()
+      iptables_up(tortpdir, check_user())
+      enable_tordns()
+      enable_torproxy()
+      resolvconf(tortpdir)
+      dnsmasq(tortpdir)
+      subprocess.call('/etc/init.d/dnsmasq restart', shell=True)
+      notify("TORtp", "Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
    """ Restore all original files"""
    try:
       copy2("%s/resolv.conf" % tortpdir, "/etc")
       copy2("%s/dnsmasq.conf" % tortpdir, "/etc")
+      os.remove("%s/resolv.conf" % tortpdir)
+      os.remove("%s/dnsmasq.conf" % tortpdir)
    except IOError as e:
       print e
+      sys.exit(1)
    subprocess.call('/etc/init.d/dnsmasq restart', shell=True)
    subprocess.call('/etc/init.d/tor reload', shell=True)
    iptables_down(tortpdir)
