@@ -31,7 +31,7 @@ def notify(title, message):
 
 def check_user():
    """ Only root can do that! """
-   uid = subprocess.Popen('id -u', shell=True, stdout = subprocess.PIPE)
+   uid = subprocess.Popen(['id', '-u'], stdout = subprocess.PIPE)
    out = uid.stdout.read()
    if int(out) == 0:
       return os.environ['SUDO_UID']
@@ -64,23 +64,25 @@ def check_sys_dependecies():
 
 def iptables_clean():
    """ This function remove all iptables rules """
-   subprocess.call('iptables -F', shell=True)
-   subprocess.call('iptables -X', shell=True)
-   subprocess.call('iptables -t nat -F', shell=True)
-   subprocess.call('iptables -t nat -X', shell=True)
+   subprocess.call(['iptables', '-F'])
+   subprocess.call(['iptables', '-X'])
+   subprocess.call(['iptables', '-t', 'nat', '-F'])
+   subprocess.call(['iptables', '-t', 'nat', '-X'])
 
 def iptables_up(tortpdir, user):
-   """ This function add iptables rules for redirect all user traffic to tortp """
-   subprocess.call('iptables-save > %s/iptables.txt' % tortpdir, shell=True)
+   """ This function make backup and add iptables rules for redirect all user traffic to tortp """
+   ipt = open("%s/iptables.txt", "w")
+   subprocess.call(['iptables-save'], stdout=ipt)
+   ipt.close()
    # Redirect DNSTor port (9053)
-   subprocess.call('iptables -t nat -A OUTPUT ! -o lo -p udp -m owner --uid-owner %s -m udp --dport 53 -j REDIRECT --to-ports 9053' % user, shell=True)
-   subprocess.call('iptables -t filter -A OUTPUT -p udp -m owner --uid-owner %s -m udp --dport 53 -j ACCEPT' % user, shell=True)
-   subprocess.call('iptables -t filter -A OUTPUT -p tcp -m owner --uid-owner %s -m tcp --dport 53 -j ACCEPT' % user, shell=True)
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'udp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'udp', '--dport', '53', '-j', 'REDIRECT', '--to-ports', '9053'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'udp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'udp', '--dport', '53', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--dport', '53', '-j', 'ACCEPT'])
    # Redirect to Transparent Proxy Tor (9040)
-   subprocess.call('iptables -t nat -A OUTPUT ! -o lo -p tcp -m owner --uid-owner %s -m tcp -j REDIRECT --to-ports 9040' % user, shell=True)
-   subprocess.call('iptables -t filter -A OUTPUT -p tcp -m owner --uid-owner %s -m tcp --dport 9040 -j ACCEPT' % user, shell=True)
-   subprocess.call('iptables -t filter -A OUTPUT ! -o lo -m owner --uid-owner %s -j DROP' % user, shell=True)
-   subprocess.call('iptables -t nat -A OUTPUT -p tcp -m owner --uid-owner %s -m tcp --syn -d 127.0.0.1 --dport 9051 -j ACCEPT' % user, shell=True)
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '-j', 'REDIRECT', '--to-ports', '9040'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--dport', '9040', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '!', '-o', 'lo', '-m', 'owner', '--uid-owner', '%s' % user, '-j', 'DROP'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
 
 def iptables_down(tortpdir):
    try:
@@ -110,6 +112,7 @@ def dnsmasq(tortpdir):
    dmasq.write('no-resolv\n')
    dmasq.write('server=127.0.0.1#9053\n')
    dmasq.write('listen-address=127.0.0.1\n')
+   dmasq.close()
 
 def enable_tordns():
    with Controller.from_port(port = 9051) as controller:
@@ -166,7 +169,10 @@ def start(tortpdir):
       enable_torproxy()
       resolvconf(tortpdir)
       dnsmasq(tortpdir)
-      subprocess.call('/etc/init.d/dnsmasq restart', shell=True)
+      # restart dnsmasq
+      devnull = open(os.devnull,"w")
+      subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
+      devnull.close()
       notify("TORtp", "Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
@@ -178,9 +184,13 @@ def stop(tortpdir):
       os.remove("%s/dnsmasq.conf" % tortpdir)
    except IOError as e:
       print e
+      print "TORtp seems already disabled"
       sys.exit(1)
-   subprocess.call('/etc/init.d/dnsmasq restart', shell=True)
-   subprocess.call('/etc/init.d/tor reload', shell=True)
+   # restart tor and dnsmasq
+   devnull = open(os.devnull,"w")
+   subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
+   subprocess.call(['/etc/init.d/tor', 'reload'], stdout=devnull)
+   devnull.close()
    iptables_down(tortpdir)
    notify("TORtp", "Tor Transparent Proxy disabled")
 
