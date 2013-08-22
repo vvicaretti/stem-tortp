@@ -52,7 +52,7 @@ def tortp_dir(home):
    return tortpdir
 
 def check_sys_dependecies():
-   """ check if all dependencies are installed """
+   """ Check if all dependencies are installed """
    devnull = open(os.devnull,"w")
    dnsmasq = subprocess.call(["dpkg","-s","dnsmasq"],stdout=devnull,stderr=subprocess.STDOUT)
    if dnsmasq != 0:
@@ -85,6 +85,7 @@ def iptables_up(tortpdir, user):
    subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
 
 def iptables_down(tortpdir):
+   """ Restore original iptables rules """
    try:
       subprocess.call('iptables-restore < %s/iptables.txt' % tortpdir, shell=True)
       os.remove("%s/iptables.txt" % tortpdir)
@@ -115,11 +116,13 @@ def dnsmasq(tortpdir):
    dmasq.close()
 
 def enable_tordns():
+   """ Use Tor's ControlPort for enable TorDNS"""
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
       controller.set_options({"DNSPort": "9053", "AutomapHostsOnResolve": "1", "AutomapHostsSuffixes": ".exit,.onion"})
 
 def enable_torproxy():
+   """ Use Tor's ControlPort for enable Tor Transparent Proxy """
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
       controller.set_options({"VirtualAddrNetwork": "10.192.0.0/10", "TransPort": "9040", "TransListenAddress": "127.0.0.1","AvoidDiskWrites": "1", "WarnUnsafeSocks": "1"})
