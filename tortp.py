@@ -21,6 +21,7 @@ import stem.process
 from stem import CircStatus
 from shutil import copy2
 import sys
+import pwd
 
 def notify(title, message):
     pynotify.init("TORtp")
@@ -38,11 +39,9 @@ def check_user():
       notify("TORtp", "Only root can do that!")
       sys.exit(1)
 
-def set_home(user):
-   """ Set user home path"""
-   h = subprocess.Popen('egrep "%s:" /etc/passwd | cut -d : -f 6' % user, shell=True, stdout = subprocess.PIPE)
-   home = h.stdout.read()
-   return home.strip()
+def get_home(user):
+   """ Get user home path"""
+   return pwd.getpwuid(int(user))[5]
 
 def tortp_dir(home):
    """ Create /home/$user/.tortp """
@@ -190,9 +189,9 @@ def main(arg):
    parser.add_argument("do", help="start | stop | new | info")
    args = parser.parse_args()
    if args.do == "start":
-      start(tortp_dir(set_home(check_user())))
+      start(tortp_dir(get_home(check_user())))
    if args.do == "stop":
-      stop(tortp_dir(set_home(check_user())))
+      stop(tortp_dir(get_home(check_user())))
    if args.do == "new":
       tor_new()
    if args.do == "info":
