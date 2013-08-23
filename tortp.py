@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 """
 TORtp is a simple way to implement
@@ -71,7 +71,7 @@ def iptables_clean():
 
 def iptables_up(tortpdir, user):
    """ This function make backup and add iptables rules for redirect all user traffic to tortp """
-   ipt = open("%s/iptables.txt", "w")
+   ipt = open("%s/iptables.txt" % tortpdir, "w")
    subprocess.call(['iptables-save'], stdout=ipt)
    ipt.close()
    # Redirect DNSTor port (9053)
