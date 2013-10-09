@@ -157,6 +157,8 @@ def tor_new():
 
 def start(tortpdir):
    try:
+      devnull = open(os.devnull,"w")
+      subprocess.call(['/etc/init.d/tor', 'restart'], stdout=devnull)
       stem.socket.ControlPort(port = 9051)
    except stem.SocketError as exc:
       print "Unable to connect to port 9051 (%s)" % exc
@@ -196,6 +198,33 @@ def stop(tortpdir):
    devnull.close()
    iptables_down(tortpdir)
    notify("TORtp", "Tor Transparent Proxy disabled")
+
+def is_running():
+   path = tortp_dir(get_home(check_user()))
+   file_path = os.path.join(path, "resolv.conf")
+   return os.path.exists(file_path)
+
+def do_start():
+   start(tortp_dir(get_home(check_user())))
+
+def do_stop():
+   stop(tortp_dir(get_home(check_user())))
+
+def get_info():
+   """ Return info about my exit node """
+   with Controller.from_port(port = 9051) as controller:
+      controller.authenticate()
+      ret = []
+      for circ in controller.get_circuits():
+         if circ.status != CircStatus.BUILT:
+            continue
+         exit_fp, exit_nickname = circ.path[-1]
+         exit_desc = controller.get_network_status(exit_fp, None)
+         exit_address = exit_desc.address if exit_desc else 'unknown'
+         ret.append([exit_fp, exit_nickname, exit_address])
+      return ret
+
+
 
 def main(arg):
    parser = argparse.ArgumentParser()
