@@ -59,7 +59,7 @@ def check_sys_dependecies():
       print "Package dnsmasq not installed"
    tor = subprocess.call(["dpkg","-s","tor"],stdout=devnull,stderr=subprocess.STDOUT)
    if tor != 0:
-       print "Package tor not installed"
+      print "Package tor not installed"
    devnull.close()
 
 def iptables_clean():
