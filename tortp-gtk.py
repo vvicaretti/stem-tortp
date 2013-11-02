@@ -40,10 +40,10 @@ class Icon(gtk.StatusIcon):
         menu = gtk.Menu()
         about = gtk.MenuItem("About")
         quit = gtk.MenuItem("Quit")
-        
+
         about.connect("activate", self.show_about_dialog)
         quit.connect("activate", gtk.main_quit)
-        
+
         menu.append(about)
         menu.append(quit)
         menu.show_all()
@@ -56,7 +56,7 @@ class Icon(gtk.StatusIcon):
         about_dialog.set_website("https://github.com/vinc3nt/stem-tortp")
         about_dialog.set_version("0.1")
         about_dialog.set_authors(["vinc3nt", "paskao"])
-        		
+
         about_dialog.run()
         about_dialog.destroy()
 
@@ -117,7 +117,7 @@ class TransparentProxyBox(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self, False, 0)
-	self.description_text = _("""Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dal tuo pc verso la rete TOR.
+	self.description_text = _("""Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dal tuo pc verso la rete TOR.\r\n
 ATTENZIONE: Dopo aver avviato TORtp assicurati che TOR stia funzionando visitando questa pagina: https://check.torproject.org""")
 
         self.buttons_box = gtk.HButtonBox()
@@ -128,11 +128,11 @@ ATTENZIONE: Dopo aver avviato TORtp assicurati che TOR stia funzionando visitand
 	self.stop_button = gtk.Button("Stop")
         self.description.set_line_wrap(True)
         self.description.set_single_line_mode(False)
-    
+
         self.start_button.connect("clicked", self.start, None)
         self.change_button.connect("clicked", self.change, None)
         self.stop_button.connect("clicked", self.stop, None)
-   
+
         # Add components
         self.buttons_box.add(self.start_button)
         self.buttons_box.add(self.change_button)
