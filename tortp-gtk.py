@@ -15,7 +15,7 @@ class Icon(gtk.StatusIcon):
 
     def __init__(self):
         gtk.StatusIcon.__init__(self)
-        self.set_from_file('icon/anonymous.ico')
+        self.set_from_file('/usr/share/pixmaps/anonymous.ico')
         self.connect("activate", self.load)
         self.connect("popup-menu", self.right_click_event)
         self.set_tooltip("TorTP")
