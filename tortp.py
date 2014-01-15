@@ -25,7 +25,7 @@ import pwd
 
 def notify(title, message):
     pynotify.init("TorTP")
-    notice = pynotify.Notification(title, message, "/usr/share/icons/tortp/anonymous.ico")
+    notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
     notice.show()
     return
 
