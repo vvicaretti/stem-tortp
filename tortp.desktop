@@ -1,11 +1,12 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TORtp
+Name=TorTP
 Comment=Redirect all network traffic via tor's transparent proxy
 Categories=Paranoid;
 Icon=anonymous.ico
-Exec=su-to-root -X -c tortp-gtk
+TryExec=su-to-root
+Exec=su-to-root -X -c /usr/bin/tortp-gtk.py
 Path=
 Terminal=false
 StartupNotify=false
