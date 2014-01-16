@@ -15,7 +15,7 @@ class Icon(gtk.StatusIcon):
 
     def __init__(self):
         gtk.StatusIcon.__init__(self)
-        self.set_from_file('icon/anonymous.ico')
+        self.set_from_file('/usr/share/pixmaps/anonymous.ico')
         self.connect("activate", self.load)
         self.connect("popup-menu", self.right_click_event)
         self.set_tooltip("TorTP")
@@ -117,15 +117,15 @@ class TransparentProxyBox(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self, False, 0)
-	self.description_text = _("""Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dal tuo pc verso la rete TOR.\r\n
-ATTENZIONE: Dopo aver avviato TORtp assicurati che TOR stia funzionando visitando questa pagina: https://check.torproject.org""")
+	self.description_text = _("""TorTP Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dall'utente paranoid verso la rete Tor.\r\n
+    Dopo aver avviato TORtp assicurati che Tor stia funzionando visitando questa pagina: https://check.torproject.org""")
 
         self.buttons_box = gtk.HButtonBox()
         self.buttons_box.set_layout(gtk.BUTTONBOX_START)
         self.description = gtk.Label(self.description_text)
-	self.start_button = gtk.Button("Start")
-	self.change_button = gtk.Button("New circuit")
-	self.stop_button = gtk.Button("Stop")
+        self.start_button = gtk.Button("Start")
+        self.change_button = gtk.Button("New circuit")
+        self.stop_button = gtk.Button("Stop")
         self.description.set_line_wrap(True)
         self.description.set_single_line_mode(False)
 

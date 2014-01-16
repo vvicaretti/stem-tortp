@@ -1,8 +1,6 @@
 stem-tortp
 ==========
 
-TORtp is a simple way to implement Tor Transparent Proxy in our GNU/Linux Box.
+TorTP will change your iptables configuration to force all traffic originating from a certain user to pass through Tor. The traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped. 
 
-TORtp use TOR's control port (python-stem library) for setup Transparen Proxy and DNS server capability on TOR, without override default configuration file with a custom /etc/tor/torrc
-
-WARNING: this project is in its initial state, the code is not yet tested
+TorTP use python-stem library for setup Transparen Proxy and DNS server capability on TOR, without override Tor default configuration file.
