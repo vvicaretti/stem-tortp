@@ -118,7 +118,7 @@ class TransparentProxyBox(gtk.VBox):
     def __init__(self):
         gtk.VBox.__init__(self, False, 0)
 	self.description_text = _("""TorTP Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dall'utente paranoid verso la rete Tor.\r\n
-    Dopo aver avviato TORtp assicurati che Tor stia funzionando visitando questa pagina: https://check.torproject.org""")
+    Dopo aver avviato TorTP assicurati che Tor stia funzionando visitando questa pagina: https://check.torproject.org""")
 
         self.buttons_box = gtk.HButtonBox()
         self.buttons_box.set_layout(gtk.BUTTONBOX_START)
