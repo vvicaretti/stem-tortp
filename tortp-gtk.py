@@ -121,7 +121,7 @@ class TransparentProxyBox(gtk.VBox):
     Dopo aver avviato TorTP assicurati che Tor stia funzionando visitando questa pagina: https://check.torproject.org""")
 
         self.buttons_box = gtk.HButtonBox()
-        self.buttons_box.set_layout(gtk.BUTTONBOX_START)
+        self.buttons_box.set_layout(gtk.BUTTONBOX_END)
         self.description = gtk.Label(self.description_text)
         self.start_button = gtk.Button("Start")
         self.change_button = gtk.Button("New circuit")
@@ -138,7 +138,7 @@ class TransparentProxyBox(gtk.VBox):
         self.buttons_box.add(self.change_button)
         self.buttons_box.add(self.stop_button)
         self.add(self.description)
-        self.add(self.buttons_box)
+        self.add(self.buttons_box, expand=False)
 
         is_running = tortp.is_running()
         self.start_button.set_sensitive(not is_running)
