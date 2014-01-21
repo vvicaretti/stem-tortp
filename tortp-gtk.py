@@ -138,7 +138,7 @@ class TransparentProxyBox(gtk.VBox):
         self.buttons_box.add(self.change_button)
         self.buttons_box.add(self.stop_button)
         self.add(self.description)
-        self.add(self.buttons_box, expand=False)
+        self.add(self.buttons_box)
 
         is_running = tortp.is_running()
         self.start_button.set_sensitive(not is_running)
