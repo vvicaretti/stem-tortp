@@ -6,8 +6,8 @@ import gobject
 import gettext
 import tortp
 
-gettext.bindtextdomain('./locale')
-gettext.textdomain('tortp')
+gettext.bindtextdomain('tortp-gtk', 'locale')
+gettext.textdomain('tortp-gtk')
 _ = gettext.gettext
 
 
@@ -38,8 +38,8 @@ class Icon(gtk.StatusIcon):
 
     def right_click_event(self, icon, button, time):
         menu = gtk.Menu()
-        about = gtk.MenuItem("About")
-        quit = gtk.MenuItem("Quit")
+        about = gtk.MenuItem(_("About"))
+        quit = gtk.MenuItem(_("Quit"))
 
         about.connect("activate", self.show_about_dialog)
         quit.connect("activate", gtk.main_quit)
@@ -95,11 +95,11 @@ class TransparentProxyInfoBox(gtk.VBox):
         self.treeview = gtk.TreeView(model=self.liststore)
         self.add(self.treeview)
         renderer_text = gtk.CellRendererText()
-        column0 = gtk.TreeViewColumn("Fingerprint", renderer_text, text=0)
+        column0 = gtk.TreeViewColumn(_("Fingerprint"), renderer_text, text=0)
         self.treeview.append_column(column0)
-        column1 = gtk.TreeViewColumn("Nickname", renderer_text, text=1)
+        column1 = gtk.TreeViewColumn(_("Nickname"), renderer_text, text=1)
         self.treeview.append_column(column1)
-        column2 = gtk.TreeViewColumn("IP address", renderer_text, text=2)
+        column2 = gtk.TreeViewColumn(_("IP address"), renderer_text, text=2)
         self.treeview.append_column(column2)
         self.load_model()
 
@@ -117,15 +117,15 @@ class TransparentProxyBox(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self, False, 0)
-	self.description_text = _("""TorTP Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) generato dall'utente paranoid verso la rete Tor.\r\n
-    Dopo aver avviato TorTP assicurati che Tor stia funzionando visitando questa pagina: https://check.torproject.org""")
+        self.description_text = _("""TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in a transparent way.
+After TorTP starts be sure that Tor is working looking at this page: https://check.torproject.org""")
 
         self.buttons_box = gtk.HButtonBox()
         self.buttons_box.set_layout(gtk.BUTTONBOX_END)
         self.description = gtk.Label(self.description_text)
-        self.start_button = gtk.Button("Start")
-        self.change_button = gtk.Button("New circuit")
-        self.stop_button = gtk.Button("Stop")
+        self.start_button = gtk.Button(_("Start"))
+        self.change_button = gtk.Button(_("New circuit"))
+        self.stop_button = gtk.Button(_("Stop"))
         self.description.set_line_wrap(True)
         self.description.set_single_line_mode(False)
 
