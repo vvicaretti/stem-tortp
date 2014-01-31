@@ -18,3 +18,7 @@ debuild
 # Coping deb package in main directory
 cd ../../../
 cp dist/deb_dist/python-tortp_1.0-1_all.deb .
+
+# Build tortp and tortp-gtk
+equivs-build tortp-deb
+equivs-build tortp-gtk-deb

@@ -1,0 +1,10 @@
+Section: Paranoid
+Priority: optional
+Standards-Version: 3.9.2
+
+Package: tortp
+Version: 0.1
+Maintainer: vinc3nt <vinc3nt@riseup.net>
+Depends: tor, curl, python-tortp
+Files: tortp /usr/bin
+Description: A simple program using python-tortp
