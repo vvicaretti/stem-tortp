@@ -10,7 +10,6 @@ on TOR, without override default configuration file
 with a custom torrc
 """
 
-import argparse
 import subprocess
 import os
 import pynotify
@@ -224,20 +223,3 @@ def get_info():
          ret.append([exit_fp, exit_nickname, exit_address])
       return ret
 
-def main(arg):
-   parser = argparse.ArgumentParser()
-   parser.add_argument("do", help="start | stop | new | info")
-   args = parser.parse_args()
-   if args.do == "start":
-      start(tortp_dir(get_home(check_user())))
-   if args.do == "stop":
-      stop(tortp_dir(get_home(check_user())))
-   if args.do == "new":
-      tor_new()
-   if args.do == "info":
-      exit_info()
-   if args.do != "start" and args.do != "stop" and args.do != "new" and args.do != "info":
-      print 'Type "tortp.py -h" for options'
-
-if __name__ == '__main__':
-   main(sys.argv[1:])
