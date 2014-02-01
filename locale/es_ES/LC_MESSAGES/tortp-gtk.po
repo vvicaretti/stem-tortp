@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-01-21 18:56+0100\n"
+"POT-Creation-Date: 2014-02-01 23:30+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,34 +18,42 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:41
+#: /home/pask/GIT/stem-tortp/tortp-gtk:40
 msgid "About"
 msgstr "Información"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:42
+#: /home/pask/GIT/stem-tortp/tortp-gtk:41
 msgid "Quit"
 msgstr "Cerrar"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:76
+#: /home/pask/GIT/stem-tortp/tortp-gtk:75
 msgid "Transparent Proxy"
 msgstr "Proxy transparente"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:84
+#: /home/pask/GIT/stem-tortp/tortp-gtk:83
 msgid "Infos"
 msgstr "Información"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:98
+#: /home/pask/GIT/stem-tortp/tortp-gtk:97
 msgid "Fingerprint"
 msgstr ""
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:100
+#: /home/pask/GIT/stem-tortp/tortp-gtk:99
 msgid "Nickname"
 msgstr ""
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:102
+#: /home/pask/GIT/stem-tortp/tortp-gtk:101
 msgid "IP address"
 msgstr "Dirección IP"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:120
+#: /home/pask/GIT/stem-tortp/tortp-gtk:119
 msgid ""
 "TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
 "a transparent way.\n"
@@ -54,13 +62,27 @@ msgid ""
 msgstr ""
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:126
+#: /home/pask/GIT/stem-tortp/tortp-gtk:125
+#: /home/pask/GIT/stem-tortp/tortp-gtk:126
 msgid "Start"
 msgstr "Arrancar"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:127
+#: /home/pask/GIT/stem-tortp/tortp-gtk:126
+#: /home/pask/GIT/stem-tortp/tortp-gtk:127
 msgid "New circuit"
 msgstr "Nuevo circuito"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:128
+#: /home/pask/GIT/stem-tortp/tortp-gtk:127
+#: /home/pask/GIT/stem-tortp/tortp-gtk:128
 msgid "Stop"
 msgstr "Parar"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk:119
+msgid ""
+"TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
+"a transparent way.\n"
+"After TorTP starts be sure that Tor is working. <a href=\"https://check."
+"torproject.org\">Check now!</a> "
+msgstr ""
