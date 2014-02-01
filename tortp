@@ -10,7 +10,7 @@ def main(arg):
    if args.do == "start":
       tortp.start(tortp.tortp_dir(tortp.get_home(tortp.check_user())))
    if args.do == "stop":
-      tortp.stop(tortp_dir(tortp.get_home(tortp.check_user())))
+      tortp.stop(tortp.tortp_dir(tortp.get_home(tortp.check_user())))
    if args.do == "new":
       tortp.tor_new()
    if args.do == "info":
