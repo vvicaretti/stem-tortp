@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: tortp-gtk 1.1\n"
+"Report-Msgid-Bugs-To: paskao@hacari.org\n"
+"POT-Creation-Date: 2014-01-21 18:56+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:41
+msgid "About"
+msgstr "Informazioni"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:42
+msgid "Quit"
+msgstr "Esci"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:76
+msgid "Transparent Proxy"
+msgstr "Proxy trasparente"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:84
+msgid "Infos"
+msgstr "Informazioni"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:98
+msgid "Fingerprint"
+msgstr ""
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:100
+msgid "Nickname"
+msgstr ""
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:102
+msgid "IP address"
+msgstr "Indirizzo IP"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:120
+msgid ""
+"TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
+"a transparent way.\n"
+"After TorTP starts be sure that Tor is working looking at this page: https://"
+"check.torproject.org"
+msgstr ""
+"TorTP Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) "
+"generato dall'utente paranoid verso la rete Tor.\n"
+"Dopo aver avviato TorTP assicurati che Tor stia funzionando visitando questa "
+"pagina: https://check.torproject.org"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:126
+msgid "Start"
+msgstr "Inizio"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:127
+msgid "New circuit"
+msgstr "Nuovo circuito"
+
+#: /home/pask/GIT/stem-tortp/tortp-gtk.py:128
+msgid "Stop"
+msgstr "Stop"
