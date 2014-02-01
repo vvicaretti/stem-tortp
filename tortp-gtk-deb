@@ -3,10 +3,12 @@ Priority: optional
 Standards-Version: 3.9.2
 
 Package: tortp-gtk
-Version: 0.2
+Version: 0.2-1
 Maintainer: vinc3nt <vinc3nt@riseup.net>
 Depends: tor, curl, python-tortp
 Files: tortp-gtk /usr/bin
  tortp.desktop /usr/share/applications
  anonymous.ico /usr/share/pixmaps
+ locale/es_ES/LC_MESSAGES/tortp-gtk.mo /usr/share/
+ locale/it_IT/LC_MESSAGES/tortp-gtk.mo /usr/share/
 Description: A simple GUI for python-tortp
