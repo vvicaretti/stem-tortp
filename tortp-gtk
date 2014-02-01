@@ -52,7 +52,7 @@ class Icon(gtk.StatusIcon):
         about_dialog = gtk.AboutDialog()
         about_dialog.set_destroy_with_parent(True)
         about_dialog.set_name("TorTransparentProxy")
-        about_dialog.set_website("https://github.com/vinc3nt/stem-tortp")
+        about_dialog.set_website("https://github.com/AvANa-BBS/stem-tortp")
         about_dialog.set_version("0.1")
         about_dialog.set_authors(["vinc3nt", "paskao"])
 
