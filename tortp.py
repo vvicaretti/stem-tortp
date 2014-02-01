@@ -27,7 +27,7 @@ from shutil import copy2
 import sys
 import pwd
 
-def notify(title, message, pynotify_available):
+def notify(title, message):
     if pynotify_available:
         notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
         notice.show()
@@ -42,7 +42,7 @@ def check_user():
    if int(out) == 0:
       return os.environ['SUDO_UID']
    else:
-      notify("TorTP", "Only root can do that!", pynotify_available)
+      notify("TorTP", "Only root can do that!")
       sys.exit(1)
 
 def get_home(user):
@@ -54,7 +54,7 @@ def tortp_dir(home):
    tortpdir = "%s/.tortp" % home
    if not os.path.exists(tortpdir):
       os.makedirs(tortpdir)
-      notify("TorTP", "Directory %s created" % tortpdir, pynotify_available)
+      notify("TorTP", "Directory %s created" % tortpdir)
    return tortpdir
 
 def check_sys_dependecies():
@@ -159,7 +159,7 @@ def tor_new():
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
       controller.signal(stem.Signal.NEWNYM)
-      notify("TorTP", "New Tor circuit created", pynotify_available)
+      notify("TorTP", "New Tor circuit created")
 
 def start(tortpdir):
    try:
@@ -184,7 +184,7 @@ def start(tortpdir):
       devnull = open(os.devnull,"w")
       subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
       devnull.close()
-      notify("TorTP", "Tor Transparent Proxy enabled", pynotify_available)
+      notify("TorTP", "Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
    """ Restore all original files"""
@@ -203,7 +203,7 @@ def stop(tortpdir):
    subprocess.call(['/etc/init.d/tor', 'reload'], stdout=devnull)
    devnull.close()
    iptables_down(tortpdir)
-   notify("TorTP", "Tor Transparent Proxy disabled", pynotify_available)
+   notify("TorTP", "Tor Transparent Proxy disabled")
 
 def is_running():
    path = tortp_dir(get_home(check_user()))
