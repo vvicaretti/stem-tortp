@@ -77,7 +77,7 @@ class MainWindow(gtk.Window):
 
         tpinfo = TransparentProxyInfoBox()
         tpinfo.set_scroll_adjustments(None, None)
-	scroll = gtk.ScrolledWindow()
+        scroll = gtk.ScrolledWindow()
         scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
         scroll.add_with_viewport(tpinfo)
         label_info = gtk.Label(_("Infos"))
