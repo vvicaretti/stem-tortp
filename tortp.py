@@ -26,6 +26,7 @@ from stem import CircStatus
 from shutil import copy2
 import sys
 import pwd
+import urllib
 
 def notify(title, message):
     if pynotify_available:
@@ -121,6 +122,25 @@ def dnsmasq(tortpdir):
    dmasq.write('listen-address=127.0.0.1\n')
    dmasq.close()
 
+
+def myip():
+   url = "http://check.torproject.org"
+   request = urllib.urlopen(url).read()
+   myip = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}", request)
+   return myip[0]
+
+def check_tortp(myip):
+   url = ("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s" % myip)
+   get = urllib.urlopen(url).read()
+   toriplist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}", get)
+   if myip in toriplist:
+      ttpworking = True
+      notify("TorTP", "Sorry. TorTP is not working: %s" % myip)
+   else:
+      ttpworking = False
+      notify("TorTP", "Congratulations. TorTP is working: %s" % myip)
+   return ttpworking
+
 def enable_tordns():
    """ Use Tor's ControlPort for enable TorDNS"""
    with Controller.from_port(port = 9051) as controller:
@@ -215,6 +235,9 @@ def do_start():
 
 def do_stop():
    stop(tortp_dir(get_home(check_user())))
+
+def do_check():
+   check_tortp(myip())
 
 def get_info():
    """ Return info about my exit node """
