@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Update locales
+./update-locales.sh
+
 # Create a source distribution (tarball, zip file, etc.)
 python setup.py sdist
 
