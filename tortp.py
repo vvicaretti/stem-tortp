@@ -27,6 +27,7 @@ from shutil import copy2
 import sys
 import pwd
 import urllib
+import re
 
 def notify(title, message):
     if pynotify_available:
@@ -184,6 +185,7 @@ def tor_new():
 def start(tortpdir):
    try:
       devnull = open(os.devnull,"w")
+      # TODO: better way to ensure Tor is started
       subprocess.call(['/etc/init.d/tor', 'restart'], stdout=devnull)
       stem.socket.ControlPort(port = 9051)
    except stem.SocketError as exc:
@@ -200,7 +202,6 @@ def start(tortpdir):
       enable_torproxy()
       resolvconf(tortpdir)
       dnsmasq(tortpdir)
-      # restart dnsmasq
       devnull = open(os.devnull,"w")
       subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
       devnull.close()
@@ -217,7 +218,6 @@ def stop(tortpdir):
       print e
       print "TorTP seems already disabled"
       sys.exit(1)
-   # restart tor and dnsmasq
    devnull = open(os.devnull,"w")
    subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
    subprocess.call(['/etc/init.d/tor', 'reload'], stdout=devnull)
@@ -236,7 +236,7 @@ def do_start():
 def do_stop():
    stop(tortp_dir(get_home(check_user())))
 
-def do_check():
+def check():
    check_tortp(myip())
 
 def get_info():
@@ -252,4 +252,3 @@ def get_info():
          exit_address = exit_desc.address if exit_desc else 'unknown'
          ret.append([exit_fp, exit_nickname, exit_address])
       return ret
-

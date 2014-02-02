@@ -126,7 +126,7 @@ After TorTP starts be sure that Tor is working. """)
         self.start_button = gtk.Button(_("Start"))
         self.change_button = gtk.Button(_("New circuit"))
         self.stop_button = gtk.Button(_("Stop"))
-        self.check_button = gtk.Buttin(_("Check"))
+        self.check_button = gtk.Button(_("Check"))
         self.description.set_line_wrap(True)
         self.description.set_single_line_mode(False)
 

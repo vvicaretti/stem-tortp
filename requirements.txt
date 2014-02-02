@@ -1,2 +1,4 @@
 stem==1.0.1
-py-notify==0.3.1
+# pynotify
+# urllib
+# re
