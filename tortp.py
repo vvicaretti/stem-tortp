@@ -205,7 +205,7 @@ def start(tortpdir):
       sys.exit(1)
    else:
       iptables_clean()
-      iptables_up(tortpdir, check_user())
+      iptables_up(tortpdir, get_toruser())
       enable_tordns()
       enable_torproxy()
       resolvconf(tortpdir)
