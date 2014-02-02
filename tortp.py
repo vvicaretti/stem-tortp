@@ -131,7 +131,6 @@ def dnsmasq(tortpdir):
    dmasq.write('listen-address=127.0.0.1\n')
    dmasq.close()
 
-
 def myip():
    url = "http://check.torproject.org"
    request = urllib.urlopen(url).read()
@@ -141,13 +140,14 @@ def myip():
 def check_tortp(myip):
    url = ("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s" % myip)
    get = urllib.urlopen(url).read()
-   toriplist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}", get)
+   torlist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}\n", get)
+   toriplist = [w.strip() for w in torlist]
    if myip in toriplist:
       ttpworking = True
-      notify("TorTP", "Sorry. TorTP is not working: %s" % myip)
+      notify("TorTP", "Congratulations. TorTP is working: %s" % myip)
    else:
       ttpworking = False
-      notify("TorTP", "Congratulations. TorTP is working: %s" % myip)
+      notify("TorTP", "Sorry. TorTP is not working: %s" % myip)
    return ttpworking
 
 def enable_tordns():
