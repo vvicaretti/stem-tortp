@@ -10,12 +10,14 @@ def main(arg):
    if args.do == "start":
       tortp.start(tortp.tortp_dir(tortp.get_home(tortp.check_user())))
    if args.do == "stop":
-      tortp.stop(tortp_dir(tortp.get_home(tortp.check_user())))
+      tortp.stop(tortp.tortp_dir(tortp.get_home(tortp.check_user())))
    if args.do == "new":
       tortp.tor_new()
    if args.do == "info":
       tortp.exit_info()
-   if args.do != "start" and args.do != "stop" and args.do != "new" and args.do != "info":
+   if args.do == "check":
+      tortp.check_tor() ####################
+   if args.do != "start" and args.do != "stop" and args.do != "new" and args.do != "info" and args.do != "check":
       print 'Type "tortp.py -h" for options'
 
 if __name__ == '__main__':
