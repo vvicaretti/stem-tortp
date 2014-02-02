@@ -47,6 +47,11 @@ def check_user():
       notify("TorTP", "Only root can do that!")
       sys.exit(1)
 
+def get_toruser():
+    # TODO: add check
+    toruser = "debian-tor"
+    return toruser
+
 def get_home(user):
    """ Get user home path"""
    return pwd.getpwuid(int(user))[5]
@@ -77,20 +82,23 @@ def iptables_clean():
    subprocess.call(['iptables', '-t', 'nat', '-F'])
    subprocess.call(['iptables', '-t', 'nat', '-X'])
 
-def iptables_up(tortpdir, user):
-   """ This function make backup and add iptables rules for redirect all user traffic to tortp """
+def iptables_up(tortpdir, toruser):
+   """
+   This function make backup and add iptables rules for redirect all network traffic to TorTP.
+   Only except with debian-tor user.
+   """
    ipt = open("%s/iptables.txt" % tortpdir, "w")
    subprocess.call(['iptables-save'], stdout=ipt)
    ipt.close()
    # Redirect DNSTor port (9053)
-   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'udp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'udp', '--dport', '53', '-j', 'REDIRECT', '--to-ports', '9053'])
-   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'udp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'udp', '--dport', '53', '-j', 'ACCEPT'])
-   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--dport', '53', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'udp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'udp', '--dport', '53', '-j', 'REDIRECT', '--to-ports', '9053'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'udp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'udp', '--dport', '53', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--dport', '53', '-j', 'ACCEPT'])
    # Redirect to Transparent Proxy Tor (9040)
-   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '-j', 'REDIRECT', '--to-ports', '9040'])
-   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--dport', '9040', '-j', 'ACCEPT'])
-   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '!', '-o', 'lo', '-m', 'owner', '--uid-owner', '%s' % user, '-j', 'DROP'])
-   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '--uid-owner', '%s' % user, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '-j', 'REDIRECT', '--to-ports', '9040'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--dport', '9040', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '!', '-o', 'lo', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-j', 'DROP'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
 
 def iptables_down(tortpdir):
    """ Restore original iptables rules """
