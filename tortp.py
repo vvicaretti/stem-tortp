@@ -21,6 +21,7 @@ except:
 import stem
 from stem.control import Controller
 import stem.util
+from stem.util import system
 import stem.process
 from stem import CircStatus
 from shutil import copy2
@@ -30,6 +31,9 @@ import urllib
 import re
 
 def notify(title, message):
+    """
+    Notification system
+    """
     if pynotify_available:
         notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
         notice.show()
@@ -38,45 +42,61 @@ def notify(title, message):
     return
 
 def check_user():
-   """ Only root can do that! """
+   """
+   Only root can do that!
+   """
    uid = subprocess.Popen(['id', '-u'], stdout = subprocess.PIPE)
    out = uid.stdout.read()
    if int(out) == 0:
       return os.environ['SUDO_UID']
    else:
-      notify("TorTP", "Only root can do that!")
+      notify("TorTP", "[!] Only root can do that!")
       sys.exit(1)
 
 def get_toruser():
-    # TODO: add check
+    """
+    Get tor username
+    """
+    pid = system.get_pid_by_name("tor")
+    # TODO: toruser = stem.util.system.get_user(pid)
     toruser = "debian-tor"
     return toruser
 
 def get_home(user):
-   """ Get user home path"""
+   """
+   Get user home path
+   """
    return pwd.getpwuid(int(user))[5]
 
 def tortp_dir(home):
-   """ Create /home/$user/.tortp """
+   """
+   Create directory /home/$user/.tortp
+   """
    tortpdir = "%s/.tortp" % home
    if not os.path.exists(tortpdir):
       os.makedirs(tortpdir)
-      notify("TorTP", "Directory %s created" % tortpdir)
+      notify("TorTP", "[+] Directory %s created" % tortpdir)
    return tortpdir
 
 def check_sys_dependecies():
-   """ Check if all dependencies are installed """
+   """
+   Check if all dependencies are installed
+   """
    devnull = open(os.devnull,"w")
    dnsmasq = subprocess.call(["dpkg","-s","dnsmasq"],stdout=devnull,stderr=subprocess.STDOUT)
    if dnsmasq != 0:
-      print "Package dnsmasq not installed"
+      notify("TorTP", "[!] Dnsmasq is not installed")
+      sys.exit(1)
    tor = subprocess.call(["dpkg","-s","tor"],stdout=devnull,stderr=subprocess.STDOUT)
    if tor != 0:
-      print "Package tor not installed"
+      notify("TorTP", "[!] Tor is not installed")
+      sys.exit(1)
    devnull.close()
 
 def iptables_clean():
-   """ This function remove all iptables rules """
+   """
+   This function remove all iptables rules
+   """
    subprocess.call(['iptables', '-F'])
    subprocess.call(['iptables', '-X'])
    subprocess.call(['iptables', '-t', 'nat', '-F'])
@@ -101,7 +121,9 @@ def iptables_up(tortpdir, toruser):
    subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
 
 def iptables_down(tortpdir):
-   """ Restore original iptables rules """
+   """
+   Restore original iptables rules
+   """
    try:
       subprocess.call('iptables-restore < %s/iptables.txt' % tortpdir, shell=True)
       os.remove("%s/iptables.txt" % tortpdir)
@@ -110,7 +132,9 @@ def iptables_down(tortpdir):
       print e
 
 def resolvconf(tortpdir):
-   """ Backup and modify resolv configuration file """
+   """
+   Backup and modify resolv configuration file
+   """
    try:
       copy2("/etc/resolv.conf",tortpdir)
    except IOError as e:
@@ -120,7 +144,9 @@ def resolvconf(tortpdir):
    resolv.close()
 
 def dnsmasq(tortpdir):
-   """ Backup and modify dnsmasq configuration file """
+   """
+   Backup and modify dnsmasq configuration file
+   """
    try:
       copy2("/etc/dnsmasq.conf",tortpdir)
    except IOError as e:
@@ -132,108 +158,129 @@ def dnsmasq(tortpdir):
    dmasq.close()
 
 def myip():
+   """
+   Get my IP from check.torproject.org
+   """
    url = "http://check.torproject.org"
    request = urllib.urlopen(url).read()
    myip = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}", request)
    return myip[0]
 
 def check_tortp(myip):
+   """
+   Check if my IP is a Tor exit node
+   """
    url = ("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s" % myip)
    get = urllib.urlopen(url).read()
    torlist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}\n", get)
    toriplist = [w.strip() for w in torlist]
    if myip in toriplist:
       ttpworking = True
-      notify("TorTP", "Congratulations. TorTP is working: %s" % myip)
+      notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
    else:
       ttpworking = False
-      notify("TorTP", "Sorry. TorTP is not working: %s" % myip)
+      notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
    return ttpworking
 
 def enable_tordns():
-   """ Use Tor's ControlPort for enable TorDNS"""
+   """
+   Use Tor ControlPort for enable TorDNS
+   """
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
-      controller.set_options({"DNSPort": "9053", "AutomapHostsOnResolve": "1", "AutomapHostsSuffixes": ".exit,.onion"})
+      controller.set_options({"DNSPort": "9053", "DNSListenAddress": "127.0.0.1", "AutomapHostsOnResolve": "1", "AutomapHostsSuffixes": ".exit,.onion"})
 
 def enable_torproxy():
-   """ Use Tor's ControlPort for enable Tor Transparent Proxy """
+   """
+   Use Tor ControlPort for enable Tor Transparent Proxy
+   """
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
       controller.set_options({"VirtualAddrNetwork": "10.192.0.0/10", "TransPort": "9040", "TransListenAddress": "127.0.0.1","AvoidDiskWrites": "1", "WarnUnsafeSocks": "1"})
 
 def exit_info():
-   """ Print info about my exit node """
-   with Controller.from_port(port = 9051) as controller:
-      controller.authenticate()
-      for circ in controller.get_circuits():
-         if circ.status != CircStatus.BUILT:
-            continue
-         exit_fp, exit_nickname = circ.path[-1]
-         exit_desc = controller.get_network_status(exit_fp, None)
-         exit_address = exit_desc.address if exit_desc else 'unknown'
-         print "Exit relay"
-         print "  fingerprint: %s" % exit_fp
-         print "  nickname: %s" % exit_nickname
-         print "  address: %s" % exit_address
+   """
+   Print info about my exit node
+   """
+   if system.is_running("tor"):
+      with Controller.from_port(port = 9051) as controller:
+         controller.authenticate()
+         for circ in controller.get_circuits():
+            if circ.status != CircStatus.BUILT:
+               continue
+            exit_fp, exit_nickname = circ.path[-1]
+            exit_desc = controller.get_network_status(exit_fp, None)
+            exit_address = exit_desc.address if exit_desc else 'unknown'
+            print "Exit relay"
+            print "  fingerprint: %s" % exit_fp
+            print "  nickname: %s" % exit_nickname
+            print "  address: %s" % exit_address
+   else:
+      notify("TorTP", "[!] Tor is not running")
 
 def tor_new():
-   """ Create a new tor circuit """
+   """
+   Create a new tor circuit
+   """
    try:
       stem.socket.ControlPort(port = 9051)
    except stem.SocketError as exc:
-      print "Unable to connect to port 9051 (%s)" % exc
-      print "Please add 'ControlPort 9051' on your /etc/tor/torrc configuration"
+      notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
       sys.exit(1)
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
       controller.signal(stem.Signal.NEWNYM)
-      notify("TorTP", "New Tor circuit created")
+      notify("TorTP", "[+] New Tor circuit created")
 
 def start(tortpdir):
-   try:
-      devnull = open(os.devnull,"w")
-      # TODO: better way to ensure Tor is started
-      subprocess.call(['/etc/init.d/tor', 'restart'], stdout=devnull)
-      stem.socket.ControlPort(port = 9051)
-   except stem.SocketError as exc:
-      print "Unable to connect to port 9051 (%s)" % exc
-      print "Please add 'ControlPort 9051' on your /etc/tor/torrc configuration"
-      sys.exit(1)
-   if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
-      print "TorTP is already running"
-      sys.exit(1)
-   else:
-      iptables_clean()
-      iptables_up(tortpdir, get_toruser())
-      enable_tordns()
-      enable_torproxy()
-      resolvconf(tortpdir)
-      dnsmasq(tortpdir)
-      devnull = open(os.devnull,"w")
-      subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-      devnull.close()
-      notify("TorTP", "Tor Transparent Proxy enabled")
+   """
+   Start TorTP
+   """
+   if system.is_running("tor"):
+      try:
+         stem.socket.ControlPort(port = 9051)
+      except stem.SocketError as exc:
+         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+         sys.exit(1)
+      if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
+         notify("TorTP", "[!] TorTP is already running")
+         sys.exit(1)
+      else:
+         iptables_clean()
+         iptables_up(tortpdir, get_toruser())
+         enable_tordns()
+         enable_torproxy()
+         resolvconf(tortpdir)
+         dnsmasq(tortpdir)
+         devnull = open(os.devnull,"w")
+         subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
+         devnull.close()
+         notify("TorTP", "[+] Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
-   """ Restore all original files"""
+   """
+   Stop TorTP and restore original network configuration
+   """
    try:
       copy2("%s/resolv.conf" % tortpdir, "/etc")
       copy2("%s/dnsmasq.conf" % tortpdir, "/etc")
       os.remove("%s/resolv.conf" % tortpdir)
       os.remove("%s/dnsmasq.conf" % tortpdir)
-   except IOError as e:
-      print e
-      print "TorTP seems already disabled"
+   except IOError:
+      notify("TorTP", "[!] TorTP seems already disabled")
       sys.exit(1)
    devnull = open(os.devnull,"w")
    subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
    subprocess.call(['/etc/init.d/tor', 'reload'], stdout=devnull)
    devnull.close()
    iptables_down(tortpdir)
-   notify("TorTP", "Tor Transparent Proxy disabled")
+   notify("TorTP", "[+] Tor Transparent Proxy disabled")
 
 def is_running():
+   """
+   check if TorTP is running
+   """
+   #TODO: change check
    path = tortp_dir(get_home(check_user()))
    file_path = os.path.join(path, "resolv.conf")
    return os.path.exists(file_path)
@@ -248,15 +295,20 @@ def check():
    check_tortp(myip())
 
 def get_info():
-   """ Return info about my exit node """
-   with Controller.from_port(port = 9051) as controller:
-      controller.authenticate()
-      ret = []
-      for circ in controller.get_circuits():
-         if circ.status != CircStatus.BUILT:
-            continue
-         exit_fp, exit_nickname = circ.path[-1]
-         exit_desc = controller.get_network_status(exit_fp, None)
-         exit_address = exit_desc.address if exit_desc else 'unknown'
-         ret.append([exit_fp, exit_nickname, exit_address])
-      return ret
+   """
+   Return info about my exit node
+   """
+   if system.is_running("tor"):
+      with Controller.from_port(port = 9051) as controller:
+         controller.authenticate()
+         ret = []
+         for circ in controller.get_circuits():
+            if circ.status != CircStatus.BUILT:
+               continue
+            exit_fp, exit_nickname = circ.path[-1]
+            exit_desc = controller.get_network_status(exit_fp, None)
+            exit_address = exit_desc.address if exit_desc else 'unknown'
+            ret.append([exit_fp, exit_nickname, exit_address])
+         return ret
+   else:
+      notify("TorTP", "[!] Tor is not running")
