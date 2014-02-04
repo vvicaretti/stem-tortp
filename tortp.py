@@ -78,7 +78,7 @@ def tortp_dir(home):
       notify("TorTP", "[+] Directory %s created" % tortpdir)
    return tortpdir
 
-def check_sys_dependecies():
+def check_sys_dependencies():
    """
    Check if all dependencies are installed
    """
@@ -91,6 +91,21 @@ def check_sys_dependecies():
    if tor != 0:
       notify("TorTP", "[!] Tor is not installed")
       sys.exit(1)
+   wipe = subprocess.call(["dpkg", "-s", "wipe"],stdout=devnull,stderr=subprocess.STDOUT)
+   if wipe != 0:
+       notify("TorTP", "[!] Wipe is not installed")
+       sys.exit(1)
+   devnull.close()
+
+
+def wipe_tor_log():
+   """
+   Remove Tor logs when TorTP is closed
+   """
+   devnull = open(os.devnull,"w")
+   wipelog = subprocess.call(["wipe", "/var/log/tor/log.mv"),stdout=devnull,stderr=subprocess.STDOUT)]
+   if wipelog != 0:
+       notify("TorTP", "[+] Wiped log")
    devnull.close()
 
 def iptables_clean():
@@ -226,6 +241,7 @@ def tor_new():
       stem.socket.ControlPort(port = 9051)
    except stem.SocketError as exc:
       notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+      #TODO: sed remove comment
       sys.exit(1)
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
@@ -241,11 +257,13 @@ def start(tortpdir):
          stem.socket.ControlPort(port = 9051)
       except stem.SocketError as exc:
          notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+         #TODO: sed remove comment
          sys.exit(1)
       if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
          notify("TorTP", "[!] TorTP is already running")
          sys.exit(1)
       else:
+         check_sys_dependencies()
          iptables_clean()
          iptables_up(tortpdir, get_toruser())
          enable_tordns()
@@ -275,6 +293,7 @@ def stop(tortpdir):
    devnull.close()
    iptables_down(tortpdir)
    notify("TorTP", "[+] Tor Transparent Proxy disabled")
+   wipe_tor_log()
 
 def is_running():
    """
