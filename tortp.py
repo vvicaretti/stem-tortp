@@ -274,6 +274,9 @@ def start(tortpdir):
          subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
          devnull.close()
          notify("TorTP", "[+] Tor Transparent Proxy enabled")
+   else:
+      notify("TorTP", "[!] Tor is not running")
+      sys.exit(1)
 
 def stop(tortpdir):
    """
@@ -331,3 +334,4 @@ def get_info():
          return ret
    else:
       notify("TorTP", "[!] Tor is not running")
+      sys.exit(1)
