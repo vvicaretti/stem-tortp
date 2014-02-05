@@ -16,7 +16,7 @@ def main(arg):
    if args.do == "info":
       tortp.exit_info()
    if args.do == "check":
-      tortp.check()
+      tortp.do_check()
    if args.do != "start" and args.do != "stop" and args.do != "new" and args.do != "info" and args.do != "check":
       print 'Type "tortp.py -h" for options'
 
