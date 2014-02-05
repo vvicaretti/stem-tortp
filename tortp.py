@@ -103,7 +103,7 @@ def wipe_tor_log():
    Remove Tor logs when TorTP is closed
    """
    devnull = open(os.devnull,"w")
-   wipelog = subprocess.call(["wipe", "/var/log/tor/log.mv"],stdout=devnull,stderr=subprocess.STDOUT)
+   wipelog = subprocess.call(["wipe", "-f", "-s", "-q", "/var/log/tor/log"],stdout=devnull,stderr=subprocess.STDOUT)
    if wipelog != 0:
        notify("TorTP", "[+] Wiped log")
    devnull.close()
