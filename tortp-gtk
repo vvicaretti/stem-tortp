@@ -168,10 +168,10 @@ After TorTP starts be sure that Tor is working. """)
 
     def check(self, widget, data=None):
         tortp.do_check()
-        self.start_button.set_sensitive(True)
-        self.stop_button.set_sensitive(False)
-        self.check_button.set_sensitive(False)
-        self.change_button.set_sensitive(False)
+        self.start_button.set_sensitive(False)
+        self.stop_button.set_sensitive(True)
+        self.check_button.set_sensitive(True)
+        self.change_button.set_sensitive(True)
 
 if __name__ == "__main__":
     icon = Icon()
