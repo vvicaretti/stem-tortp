@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-02-02 16:34+0000\n"
+"POT-Creation-Date: 2014-02-06 14:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,62 +20,57 @@ msgstr ""
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:41
 #: /home/pask/GIT/stem-tortp/tortp-gtk:40
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:40
+#: /home/paranoid/stem-tortp/tortp-gtk:40
 msgid "About"
 msgstr "Informazioni"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:42
 #: /home/pask/GIT/stem-tortp/tortp-gtk:41
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:41
+#: /home/paranoid/stem-tortp/tortp-gtk:41
 msgid "Quit"
 msgstr "Esci"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:76
 #: /home/pask/GIT/stem-tortp/tortp-gtk:75
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:75
+#: /home/paranoid/stem-tortp/tortp-gtk:75
 msgid "Transparent Proxy"
 msgstr "Proxy trasparente"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:84
 #: /home/pask/GIT/stem-tortp/tortp-gtk:83
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:83
+#: /home/paranoid/stem-tortp/tortp-gtk:83
 msgid "Infos"
 msgstr "Informazioni"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:98
 #: /home/pask/GIT/stem-tortp/tortp-gtk:97
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:97
+#: /home/paranoid/stem-tortp/tortp-gtk:97
 msgid "Fingerprint"
 msgstr ""
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:100
 #: /home/pask/GIT/stem-tortp/tortp-gtk:99
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:99
+#: /home/paranoid/stem-tortp/tortp-gtk:99
 msgid "Nickname"
 msgstr ""
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:102
 #: /home/pask/GIT/stem-tortp/tortp-gtk:101
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:101
+#: /home/paranoid/stem-tortp/tortp-gtk:101
 msgid "IP address"
 msgstr "Indirizzo IP"
-
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:120
-#: /home/pask/GIT/stem-tortp/tortp-gtk:119
-msgid ""
-"TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
-"a transparent way.\n"
-"After TorTP starts be sure that Tor is working looking at this page: https://"
-"check.torproject.org"
-msgstr ""
-"TorTP Redirige in maniera trasparente tutto il traffico TCP ed UDP (dns) "
-"generato dall'utente paranoid verso la rete Tor.\n"
-"Dopo aver avviato TorTP assicurati che Tor stia funzionando visitando questa "
-"pagina: https://check.torproject.org"
 
 #: /home/pask/GIT/stem-tortp/tortp-gtk.py:126
 #: /home/pask/GIT/stem-tortp/tortp-gtk:125
 #: /home/pask/GIT/stem-tortp/tortp-gtk:126
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:126
+#: /home/paranoid/stem-tortp/tortp-gtk:126
 msgid "Start"
 msgstr "Inizio"
 
@@ -83,6 +78,7 @@ msgstr "Inizio"
 #: /home/pask/GIT/stem-tortp/tortp-gtk:126
 #: /home/pask/GIT/stem-tortp/tortp-gtk:127
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:127
+#: /home/paranoid/stem-tortp/tortp-gtk:127
 msgid "New circuit"
 msgstr "Nuovo circuito"
 
@@ -90,24 +86,21 @@ msgstr "Nuovo circuito"
 #: /home/pask/GIT/stem-tortp/tortp-gtk:127
 #: /home/pask/GIT/stem-tortp/tortp-gtk:128
 #: /home/vinc3nt/freepto/TorTP/tortp-gtk:128
+#: /home/paranoid/stem-tortp/tortp-gtk:128
 msgid "Stop"
 msgstr "Stop"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk:119
-msgid ""
-"TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
-"a transparent way.\n"
-"After TorTP starts be sure that Tor is working. <a href=\"https://check."
-"torproject.org\">Check now!</a> "
-msgstr ""
+#: /home/vinc3nt/freepto/TorTP/tortp-gtk:129
+#: /home/paranoid/stem-tortp/tortp-gtk:129
+msgid "Check"
+msgstr "Verifica"
 
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:119
+#: /home/paranoid/stem-tortp/tortp-gtk:119
 msgid ""
-"TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in "
+"TorTP redirect all TCP ad UDP (dns) traffic generated from your computer in "
 "a transparent way.\n"
 "After TorTP starts be sure that Tor is working. "
 msgstr ""
-
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:129
-msgid "Check"
-msgstr ""
+"TorTP redirige tutto il traffico TCP e UDP (dns) generato dal tuo computer "
+"in modo trasparente.\n"
+"Dopo aver avviato TorTP assicurati che Tor stia funzionando."
