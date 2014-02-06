@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-02-06 14:50+0100\n"
+"POT-Creation-Date: 2014-02-06 17:49+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,85 +17,39 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:41
-#: /home/pask/GIT/stem-tortp/tortp-gtk:40
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:40
-#: /home/paranoid/stem-tortp/tortp-gtk:40
 msgid "About"
 msgstr "Información"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:42
-#: /home/pask/GIT/stem-tortp/tortp-gtk:41
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:41
-#: /home/paranoid/stem-tortp/tortp-gtk:41
 msgid "Quit"
 msgstr "Cerrar"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:76
-#: /home/pask/GIT/stem-tortp/tortp-gtk:75
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:75
-#: /home/paranoid/stem-tortp/tortp-gtk:75
 msgid "Transparent Proxy"
 msgstr "Proxy transparente"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:84
-#: /home/pask/GIT/stem-tortp/tortp-gtk:83
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:83
-#: /home/paranoid/stem-tortp/tortp-gtk:83
 msgid "Infos"
 msgstr "Información"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:98
-#: /home/pask/GIT/stem-tortp/tortp-gtk:97
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:97
-#: /home/paranoid/stem-tortp/tortp-gtk:97
 msgid "Fingerprint"
 msgstr ""
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:100
-#: /home/pask/GIT/stem-tortp/tortp-gtk:99
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:99
-#: /home/paranoid/stem-tortp/tortp-gtk:99
 msgid "Nickname"
 msgstr ""
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:102
-#: /home/pask/GIT/stem-tortp/tortp-gtk:101
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:101
-#: /home/paranoid/stem-tortp/tortp-gtk:101
 msgid "IP address"
 msgstr "Dirección IP"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:126
-#: /home/pask/GIT/stem-tortp/tortp-gtk:125
-#: /home/pask/GIT/stem-tortp/tortp-gtk:126
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:126
-#: /home/paranoid/stem-tortp/tortp-gtk:126
 msgid "Start"
 msgstr "Arrancar"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:127
-#: /home/pask/GIT/stem-tortp/tortp-gtk:126
-#: /home/pask/GIT/stem-tortp/tortp-gtk:127
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:127
-#: /home/paranoid/stem-tortp/tortp-gtk:127
 msgid "New circuit"
 msgstr "Nuevo circuito"
 
-#: /home/pask/GIT/stem-tortp/tortp-gtk.py:128
-#: /home/pask/GIT/stem-tortp/tortp-gtk:127
-#: /home/pask/GIT/stem-tortp/tortp-gtk:128
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:128
-#: /home/paranoid/stem-tortp/tortp-gtk:128
 msgid "Stop"
 msgstr "Parar"
 
-#: /home/vinc3nt/freepto/TorTP/tortp-gtk:129
-#: /home/paranoid/stem-tortp/tortp-gtk:129
 msgid "Check"
 msgstr "Verifica"
 
-#: /home/paranoid/stem-tortp/tortp-gtk:119
 msgid ""
 "TorTP redirect all TCP ad UDP (dns) traffic generated from your computer in "
 "a transparent way.\n"
