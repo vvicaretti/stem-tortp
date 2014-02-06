@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-02-06 17:49+0100\n"
+"POT-Creation-Date: 2014-02-06 18:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,3 +58,48 @@ msgstr ""
 "TorTP redirecciona todo el tráfico TCP y UDP (dns) generado de tuordenador "
 "de manera transparente.\n"
 "Después el arranque de TorTP asegurate que Tor está funcionando."
+
+msgid "Tor Transparent Proxy enabled"
+msgstr "Tor Transparent Proxy activado"
+
+#, python-format
+msgid "Unable to connect to port 9051 (%s)"
+msgstr "Imposible conectarse al puerto 9051 (%s)"
+
+msgid "TorTP is already running"
+msgstr "TorTP esta ya en ejecución"
+
+msgid "Tor is not running"
+msgstr "Tor no esta en ejecución"
+
+msgid "An error occurred while starting TorTP"
+msgstr "Ha ocurrido un error al empezar TorTP"
+
+msgid "New Tor circuit created"
+msgstr "Nuevo circuito Tor creado"
+
+msgid "Unable to change Tor circuit"
+msgstr "Imposible cambiar circuito Tor"
+
+msgid "Tor Transparent Proxy disabled"
+msgstr "Tor Transparent Proxy inhabilitado"
+
+msgid "TorTP seems already disabled"
+msgstr "TorTP parece ser inhabilitado"
+
+msgid "An error occurred while stopping TorTP"
+msgstr "Ha ocurrido un error al parar TorTP"
+
+#, python-format
+msgid "Congratulations. TorTP is working: %s"
+msgstr "Enhorabuena. TorTP está funcionando: %s"
+
+#, python-format
+msgid "Sorry. TorTP is not working: %s"
+msgstr "TorTP no está funcionando: %s"
+
+msgid "An error occurred while checking TorTP"
+msgstr "Ha ocurrido un error al verificar el funcionamento de TorTP"
+
+msgid "An error occurred while getting Tor infos"
+msgstr "Ha ocurrido un error al reperir informaciones de Tor"

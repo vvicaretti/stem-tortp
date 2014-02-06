@@ -123,8 +123,11 @@ class TransparentProxyInfoBox(gtk.VBox):
        try:
            for item in tortp.get_info():
                self.liststore.append(item)
-       except isistance(SystemExit(1), Exception):
-           notify("TorTP", "[!] Tor is not running")
+       except SystemExit as e:
+           if e.code == 1:
+               notify("TorTP", _("Tor is not running"))
+           else:
+               notify("TorTP", _("An error occurred while getting Tor infos"))
        except:
            pass
        gobject.timeout_add_seconds(5, self.load_model)
@@ -170,63 +173,63 @@ After TorTP starts be sure that Tor is working. """)
     def start(self, widget, data=None):
         try:
             tortp.do_start()
-            notify("TorTP", "[+] Tor Transparent Proxy enabled")
+            notify("TorTP", _("Tor Transparent Proxy enabled"))
             self.start_button.set_sensitive(False)
             self.stop_button.set_sensitive(True)
             self.check_button.set_sensitive(True)
             self.change_button.set_sensitive(True)
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % e)
+                notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
             elif e.code == 2:
-                notify("TorTP", "[!] TorTP is already running")
+                notify("TorTP", _("TorTP is already running"))
             elif e.code == 3:
-                notify("TorTP", "[!] Tor is not running")
+                notify("TorTP", _("Tor is not running"))
             else:
-                notify("TorTP", "[!] An error occurred while starting TorTP")
+                notify("TorTP", _("An error occurred while starting TorTP"))
         except:
-            notify("TorTP", "[!] An error occurred while starting TorTP")
+            notify("TorTP", _("An error occurred while starting TorTP"))
 
     def change(self, widget, data=None):
         try:
             tortp.tor_new()
-            notify("TorTP", "[+] New Tor circuit created")
+            notify("TorTP", _("New Tor circuit created"))
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+                notify("TorTP", _("Unable to connect to port 9051 (%s)") % exc)
             else:
-                notify("TorTP", "[!] Unable to change Tor circuit")
+                notify("TorTP", _("Unable to change Tor circuit"))
         except:
-            notify("TorTP", "[!] Unable to change Tor circuit")
+            notify("TorTP", _("Unable to change Tor circuit"))
 
     def stop(self, widget, data=None):
         try:
             tortp.do_stop()
-            notify("TorTP", "[+] Tor Transparent Proxy disabled")
+            notify("TorTP", _("Tor Transparent Proxy disabled"))
             self.start_button.set_sensitive(True)
             self.stop_button.set_sensitive(False)
             self.check_button.set_sensitive(False)
             self.change_button.set_sensitive(False)
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", "[!] TorTP seems already disabled")
+                notify("TorTP", _("TorTP seems already disabled"))
             else:
-                notify("TorTP", "[!] An error occurred while stopping TorTP")
+                notify("TorTP", _("An error occurred while stopping TorTP"))
         except:
-            notify("TorTP", "[!] An error occurred while stopping TorTP")
+            notify("TorTP", _("An error occurred while stopping TorTP"))
 
     def check(self, widget, data=None):
         myip = None
         try:
             myip = tortp.do_check()
-            notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
+            notify("TorTP", _("Congratulations. TorTP is working: %s") % myip)
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
+                notify("TorTP", _("Sorry. TorTP is not working: %s") % myip)
             else:
-                notify("TorTP", "[!] An error occurred while checking TorTP")
+                notify("TorTP", _("An error occurred while checking TorTP"))
         except:
-            notify("TorTP", "[!] An error occurred while checking TorTP")
+            notify("TorTP", _("An error occurred while checking TorTP"))
 
 if __name__ == "__main__":
     icon = Icon()
