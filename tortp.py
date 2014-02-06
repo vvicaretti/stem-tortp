@@ -12,12 +12,6 @@ with a custom torrc
 
 import subprocess
 import os
-try:
-    import pynotify
-    pynotify.init("TorTP")
-    pynotify_available = True
-except:
-    pynotify_available = False
 import stem
 from stem.control import Controller
 from stem.version import get_system_tor_version
@@ -35,11 +29,7 @@ def notify(title, message):
     """
     Notification system
     """
-    if pynotify_available:
-        notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
-        notice.show()
-    else:
-        print("[%s]: %s" % (title, message))
+    print("[%s]: %s" % (title, message))
     return
 
 def check_user():
@@ -190,13 +180,11 @@ def check_tortp(myip):
    get = urllib.urlopen(url).read()
    torlist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}\n", get)
    toriplist = [w.strip() for w in torlist]
-   if myip in toriplist:
-      ttpworking = True
-      notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
-   else:
-      ttpworking = False
+   if myip not in toriplist:
       notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
-   return ttpworking
+      sys.exit(1)
+   notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
+   return myip
 
 def enable_tordns():
    """
@@ -263,7 +251,7 @@ def start(tortpdir):
          sys.exit(1)
       if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
          notify("TorTP", "[!] TorTP is already running")
-         sys.exit(1)
+         sys.exit(2)
       else:
          check_sys_dependencies()
          iptables_clean()
@@ -278,7 +266,7 @@ def start(tortpdir):
          notify("TorTP", "[+] Tor Transparent Proxy enabled")
    else:
       notify("TorTP", "[!] Tor is not running")
-      sys.exit(1)
+      sys.exit(3)
 
 def stop(tortpdir):
    """
@@ -316,7 +304,7 @@ def do_stop():
    stop(tortp_dir(get_home(check_user())))
 
 def do_check():
-   check_tortp(myip())
+   return check_tortp(myip())
 
 def get_info():
    """
@@ -335,5 +323,4 @@ def get_info():
             ret.append([exit_fp, exit_nickname, exit_address])
          return ret
    else:
-      notify("TorTP", "[!] Tor is not running")
       sys.exit(1)

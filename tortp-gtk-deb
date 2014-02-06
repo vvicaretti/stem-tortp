@@ -9,6 +9,6 @@ Depends: tor, curl, python-tortp, tortp
 Files: tortp-gtk /usr/bin
  tortp.desktop /usr/share/applications
  anonymous.ico /usr/share/pixmaps
- locale/es_ES/LC_MESSAGES/tortp-gtk.po /usr/share/
- locale/it_IT/LC_MESSAGES/tortp-gtk.po /usr/share/
+ locale/es_ES/LC_MESSAGES/tortp-gtk.mo /usr/share/
+ locale/it_IT/LC_MESSAGES/tortp-gtk.mo /usr/share/
 Description: A simple GUI for python-tortp

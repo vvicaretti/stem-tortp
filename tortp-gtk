@@ -5,9 +5,25 @@ import gtk
 import gobject
 import gettext
 import tortp
+try:
+    import pynotify
+    pynotify.init("TorTP")
+    pynotify_available = True
+except:
+    pynotify_available = False
 
 gettext.textdomain('tortp-gtk')
 _ = gettext.gettext
+
+
+def notify(title, message):
+    """
+    Notification system
+    """
+    if pynotify_available:
+        notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
+        notice.show()
+    return
 
 
 class Icon(gtk.StatusIcon):
@@ -65,6 +81,7 @@ class MainWindow(gtk.Window):
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
         self.set_border_width(10)
+        self.set_icon_from_file('/usr/share/pixmaps/anonymous.ico')
 
         box = gtk.VBox(False, 0)
         notebook = gtk.Notebook()
@@ -107,6 +124,11 @@ class TransparentProxyInfoBox(gtk.VBox):
        try:
            for item in tortp.get_info():
                self.liststore.append(item)
+       except SystemExit as e:
+           if e.code == 1:
+               notify("TorTP", _("Tor is not running"))
+           else:
+               notify("TorTP", _("An error occurred while getting Tor infos"))
        except:
            pass
        gobject.timeout_add_seconds(5, self.load_model)
@@ -116,7 +138,7 @@ class TransparentProxyBox(gtk.VBox):
 
     def __init__(self):
         gtk.VBox.__init__(self, False, 0)
-        self.description_text = _("""TorTP redirect all TCP ad UDP (dns) traffic generated from paranoid user in a transparent way.
+        self.description_text = _("""TorTP redirect all TCP ad UDP (dns) traffic generated from your computer in a transparent way.
 After TorTP starts be sure that Tor is working. """)
 
         self.buttons_box = gtk.HButtonBox()
@@ -150,28 +172,65 @@ After TorTP starts be sure that Tor is working. """)
         self.check_button.set_sensitive(is_running)
 
     def start(self, widget, data=None):
-        tortp.do_start()
-        self.start_button.set_sensitive(False)
-        self.stop_button.set_sensitive(True)
-        self.check_button.set_sensitive(True)
-        self.change_button.set_sensitive(True)
+        try:
+            tortp.do_start()
+            notify("TorTP", _("Tor Transparent Proxy enabled"))
+            self.start_button.set_sensitive(False)
+            self.stop_button.set_sensitive(True)
+            self.check_button.set_sensitive(True)
+            self.change_button.set_sensitive(True)
+        except SystemExit as e:
+            if e.code == 1:
+                notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
+            elif e.code == 2:
+                notify("TorTP", _("TorTP is already running"))
+            elif e.code == 3:
+                notify("TorTP", _("Tor is not running"))
+            else:
+                notify("TorTP", _("An error occurred while starting TorTP"))
+        except:
+            notify("TorTP", _("An error occurred while starting TorTP"))
 
     def change(self, widget, data=None):
-        tortp.tor_new()
+        try:
+            tortp.tor_new()
+            notify("TorTP", _("New Tor circuit created"))
+        except SystemExit as e:
+            if e.code == 1:
+                notify("TorTP", _("Unable to connect to port 9051 (%s)") % exc)
+            else:
+                notify("TorTP", _("Unable to change Tor circuit"))
+        except:
+            notify("TorTP", _("Unable to change Tor circuit"))
 
     def stop(self, widget, data=None):
-        tortp.do_stop()
-        self.start_button.set_sensitive(True)
-        self.stop_button.set_sensitive(False)
-        self.check_button.set_sensitive(False)
-        self.change_button.set_sensitive(False)
+        try:
+            tortp.do_stop()
+            notify("TorTP", _("Tor Transparent Proxy disabled"))
+            self.start_button.set_sensitive(True)
+            self.stop_button.set_sensitive(False)
+            self.check_button.set_sensitive(False)
+            self.change_button.set_sensitive(False)
+        except SystemExit as e:
+            if e.code == 1:
+                notify("TorTP", _("TorTP seems already disabled"))
+            else:
+                notify("TorTP", _("An error occurred while stopping TorTP"))
+        except:
+            notify("TorTP", _("An error occurred while stopping TorTP"))
 
     def check(self, widget, data=None):
-        tortp.do_check()
-        self.start_button.set_sensitive(False)
-        self.stop_button.set_sensitive(True)
-        self.check_button.set_sensitive(True)
-        self.change_button.set_sensitive(True)
+        myip = None
+        try:
+            myip = tortp.do_check()
+            notify("TorTP", _("Congratulations. TorTP is working: %s") % myip)
+        except SystemExit as e:
+            if e.code == 1:
+                notify("TorTP", _("Sorry. TorTP is not working: %s") % myip)
+            else:
+                notify("TorTP", _("An error occurred while checking TorTP"))
+        except:
+            notify("TorTP", _("An error occurred while checking TorTP"))
 
 if __name__ == "__main__":
     icon = Icon()
