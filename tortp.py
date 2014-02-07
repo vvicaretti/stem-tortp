@@ -172,15 +172,11 @@ def myip():
    myip = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}", request)
    return myip[0]
 
-def check_tortp(myip):
+def check_tortp(myip, exit):
    """
    Check if my IP is a Tor exit node
    """
-   url = ("https://check.torproject.org/cgi-bin/TorBulkExitList.py?ip=%s" % myip)
-   get = urllib.urlopen(url).read()
-   torlist = re.findall(r"\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}\n", get)
-   toriplist = [w.strip() for w in torlist]
-   if myip not in toriplist:
+   if myip not in exit['ipaddress']:
       notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
       sys.exit(1)
    notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
@@ -202,26 +198,42 @@ def enable_torproxy():
       controller.authenticate()
       controller.set_options({"VirtualAddrNetwork": "10.192.0.0/10", "TransPort": "9040", "TransListenAddress": "127.0.0.1","AvoidDiskWrites": "1", "WarnUnsafeSocks": "1"})
 
-def exit_info():
+def get_exit():
+   """
+   Get list of exit node from stem
+   """
+    if system.is_running("tor"):
+       with Controller.from_port(port = 9051) as controller:
+          controller.authenticate()
+          exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
+          count = 0
+          for circ in controller.get_circuits():
+             if circ.status != CircStatus.BUILT:
+                continue
+             exit_fp, exit_nickname = circ.path[-1]
+             exit_desc = controller.get_network_status(exit_fp, None)
+             exit_address = exit_desc.address if exit_desc else 'unknown'
+             count += 1
+             exit['count'].append(count)
+             exit['fingerprint'].append(exit_fb)
+             exit['nickname'].append(exit_desc)
+             exit['ipaddress'].append(exit_address)
+       return exit
+   else:
+       notify("TorTP", "[!] Tor is not running")
+
+
+def exit_info(exit):
    """
    Print info about my exit node
    """
-   if system.is_running("tor"):
-      with Controller.from_port(port = 9051) as controller:
-         controller.authenticate()
-         for circ in controller.get_circuits():
-            if circ.status != CircStatus.BUILT:
-               continue
-            exit_fp, exit_nickname = circ.path[-1]
-            exit_desc = controller.get_network_status(exit_fp, None)
-            exit_address = exit_desc.address if exit_desc else 'unknown'
-            torversion = get_system_tor_version()
-            print "Exit relay [Tor %s]" % torversion
-            print "  fingerprint: %s" % exit_fp
-            print "  nickname: %s" % exit_nickname
-            print "  address: %s" % exit_address
-   else:
-      notify("TorTP", "[!] Tor is not running")
+   torversion = get_system_tor_version()
+   print "Exit relay [Tor %s]" % torversion
+   for i in exit['count']:
+      print "  fingerprint: %s" % exit['fingerprint'][i]
+      print "  nickname: %s" % exit['nickname'][i]
+      print "  address: %s" % exit['ipaddress'][i]
+
 
 def tor_new():
    """
@@ -304,23 +316,4 @@ def do_stop():
    stop(tortp_dir(get_home(check_user())))
 
 def do_check():
-   return check_tortp(myip())
-
-def get_info():
-   """
-   Return info about my exit node
-   """
-   if system.is_running("tor"):
-      with Controller.from_port(port = 9051) as controller:
-         controller.authenticate()
-         ret = []
-         for circ in controller.get_circuits():
-            if circ.status != CircStatus.BUILT:
-               continue
-            exit_fp, exit_nickname = circ.path[-1]
-            exit_desc = controller.get_network_status(exit_fp, None)
-            exit_address = exit_desc.address if exit_desc else 'unknown'
-            ret.append([exit_fp, exit_nickname, exit_address])
-         return ret
-   else:
-      sys.exit(1)
+   return check_tortp(myip(), get_exit())
