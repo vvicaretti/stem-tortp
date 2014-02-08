@@ -202,25 +202,25 @@ def get_exit():
    """
    Get list of exit node from stem
    """
-    if system.is_running("tor"):
-       with Controller.from_port(port = 9051) as controller:
-          controller.authenticate()
-          exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
-          count = 0
-          for circ in controller.get_circuits():
-             if circ.status != CircStatus.BUILT:
-                continue
-             exit_fp, exit_nickname = circ.path[-1]
-             exit_desc = controller.get_network_status(exit_fp, None)
-             exit_address = exit_desc.address if exit_desc else 'unknown'
-             count += 1
-             exit['count'].append(count)
-             exit['fingerprint'].append(exit_fb)
-             exit['nickname'].append(exit_desc)
-             exit['ipaddress'].append(exit_address)
-       return exit
+   if system.is_running("tor"):
+      with Controller.from_port(port = 9051) as controller:
+         controller.authenticate()
+         exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
+         count = 0
+         for circ in controller.get_circuits():
+            if circ.status != CircStatus.BUILT:
+               continue
+            exit_fp, exit_nickname = circ.path[-1]
+            exit_desc = controller.get_network_status(exit_fp, None)
+            exit_address = exit_desc.address if exit_desc else 'unknown'
+            count += 1
+            exit['count'].append(count)
+            exit['fingerprint'].append(exit_fb)
+            exit['nickname'].append(exit_desc)
+            exit['ipaddress'].append(exit_address)
+      return exit
    else:
-       notify("TorTP", "[!] Tor is not running")
+      notify("TorTP", "[!] Tor is not running")
 
 
 def exit_info(exit):

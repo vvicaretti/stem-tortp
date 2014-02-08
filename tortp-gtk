@@ -2,6 +2,8 @@
 import pygtk
 pygtk.require('2.0')
 import gtk
+import os
+import sys
 import gobject
 import gettext
 import tortp
@@ -24,6 +26,29 @@ def notify(title, message):
         notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
         notice.show()
     return
+
+def check_if_running():
+   """
+   Check if TorTP-GTK is already running
+   """
+   if os.path.exists("/tmp/tortp-gtk.pid"):
+       sys.exit(2)
+
+def get_pid():
+   """
+   Get TorTP-GTK pid
+   """
+   p = open("/tmp/tortp-gtk.pid", "r")
+   pid = p.read()
+   return pid
+
+def create_pid():
+   """
+   Create TorTP-GTK pidfile
+   """
+   pidfile = open("/tmp/tortp-gtk.pid", "w")
+   pidfile.write("%s" % os.getpid()
+   pidfile.close
 
 
 class Icon(gtk.StatusIcon):
@@ -173,6 +198,8 @@ After TorTP starts be sure that Tor is working. """)
 
     def start(self, widget, data=None):
         try:
+            check_if_running()
+            create_pid()
             tortp.do_start()
             notify("TorTP", _("Tor Transparent Proxy enabled"))
             self.start_button.set_sensitive(False)
@@ -183,7 +210,7 @@ After TorTP starts be sure that Tor is working. """)
             if e.code == 1:
                 notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
             elif e.code == 2:
-                notify("TorTP", _("TorTP is already running"))
+                notify("TorTP", _("TorTP is already running with pid %s" % get_pid()))
             elif e.code == 3:
                 notify("TorTP", _("Tor is not running"))
             else:
@@ -231,6 +258,7 @@ After TorTP starts be sure that Tor is working. """)
                 notify("TorTP", _("An error occurred while checking TorTP"))
         except:
             notify("TorTP", _("An error occurred while checking TorTP"))
+
 
 if __name__ == "__main__":
     icon = Icon()
