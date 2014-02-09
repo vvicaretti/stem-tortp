@@ -176,11 +176,15 @@ def check_tortp(myip, exit):
    """
    Check if my IP is a Tor exit node
    """
-   if myip not in exit['ipaddress']:
-      notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
-      sys.exit(1)
-   notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
-   return myip
+   if system.is_running("tor"):
+      if myip not in exit['ipaddress']:
+         notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
+         sys.exit(1)
+      notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
+      return myip
+   else:
+      notify("TorTP", "[!] Tor is not running")
+      sys.exit(3)
 
 def enable_tordns():
    """
@@ -206,7 +210,7 @@ def get_exit():
       with Controller.from_port(port = 9051) as controller:
          controller.authenticate()
          exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
-         count = 0
+         count = -1
          for circ in controller.get_circuits():
             if circ.status != CircStatus.BUILT:
                continue
@@ -215,8 +219,8 @@ def get_exit():
             exit_address = exit_desc.address if exit_desc else 'unknown'
             count += 1
             exit['count'].append(count)
-            exit['fingerprint'].append(exit_fb)
-            exit['nickname'].append(exit_desc)
+            exit['fingerprint'].append(exit_fp)
+            exit['nickname'].append(exit_nickname)
             exit['ipaddress'].append(exit_address)
       return exit
    else:
@@ -228,12 +232,11 @@ def exit_info(exit):
    Print info about my exit node
    """
    torversion = get_system_tor_version()
-   print "Exit relay [Tor %s]" % torversion
+   print "Tor version: %s\n" % torversion
    for i in exit['count']:
-      print "  fingerprint: %s" % exit['fingerprint'][i]
       print "  nickname: %s" % exit['nickname'][i]
       print "  address: %s" % exit['ipaddress'][i]
-
+      print "  fingerprint: %s\n" % exit['fingerprint'][i]
 
 def tor_new():
    """

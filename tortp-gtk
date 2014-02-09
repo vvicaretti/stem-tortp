@@ -28,27 +28,28 @@ def notify(title, message):
     return
 
 def check_if_running():
-   """
-   Check if TorTP-GTK is already running
-   """
-   if os.path.exists("/tmp/tortp-gtk.pid"):
-       sys.exit(2)
+    """
+    Check if TorTP-GTK is already running
+    """
+    if os.path.exists("/tmp/tortp-gtk.pid"):
+        notify("TorTP", _("TorTP is already running with pid: %s" % get_pid()))
+        sys.exit(2)
 
 def get_pid():
-   """
-   Get TorTP-GTK pid
-   """
-   p = open("/tmp/tortp-gtk.pid", "r")
-   pid = p.read()
-   return pid
+    """
+    Get TorTP-GTK pid
+    """
+    p = open("/tmp/tortp-gtk.pid", "r")
+    pid = p.read()
+    return pid
 
 def create_pid():
-   """
-   Create TorTP-GTK pidfile
-   """
-   pidfile = open("/tmp/tortp-gtk.pid", "w")
-   pidfile.write("%s" % os.getpid()
-   pidfile.close
+    """
+    Create TorTP-GTK pidfile
+    """
+    pidfile = open("/tmp/tortp-gtk.pid", "w")
+    pidfile.write("%s" % os.getpid())
+    pidfile.close
 
 
 class Icon(gtk.StatusIcon):
@@ -92,10 +93,10 @@ class Icon(gtk.StatusIcon):
     def show_about_dialog(self, widget):
         about_dialog = gtk.AboutDialog()
         about_dialog.set_destroy_with_parent(True)
-        about_dialog.set_name("TorTransparentProxy")
+        about_dialog.set_name("Tor Transparent Proxy")
         about_dialog.set_website("https://github.com/AvANa-BBS/stem-tortp")
         about_dialog.set_version("0.2")
-        about_dialog.set_authors(["vinc3nt", "paskao"])
+        about_dialog.set_authors(["vinc3nt (vinc3nt@riseup.net", "paskao (paskao@hacari.org)"])
 
         about_dialog.run()
         about_dialog.destroy()
@@ -114,7 +115,7 @@ class MainWindow(gtk.Window):
         self.add(box)
 
         tp = TransparentProxyBox()
-        label = gtk.Label(_("Transparent Proxy"))
+        label = gtk.Label(_("Tor Transparent Proxy"))
         notebook.append_page(tp, label)
 
         tpinfo = TransparentProxyInfoBox()
@@ -146,8 +147,13 @@ class TransparentProxyInfoBox(gtk.VBox):
 
     def load_model(self):
        self.liststore.clear()
+       exit_node = tortp.get_exit()
        try:
-           for item in tortp.get_info():
+           for i in exit_node['count']:
+               item = []
+               item.append(exit_node['fingerprint'][i])
+               item.append(exit_node['nickname'][i])
+               item.append(exit_node['ipaddress'][i])
                self.liststore.append(item)
        except SystemExit as e:
            if e.code == 1:
@@ -198,8 +204,6 @@ After TorTP starts be sure that Tor is working. """)
 
     def start(self, widget, data=None):
         try:
-            check_if_running()
-            create_pid()
             tortp.do_start()
             notify("TorTP", _("Tor Transparent Proxy enabled"))
             self.start_button.set_sensitive(False)
@@ -210,7 +214,7 @@ After TorTP starts be sure that Tor is working. """)
             if e.code == 1:
                 notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
             elif e.code == 2:
-                notify("TorTP", _("TorTP is already running with pid %s" % get_pid()))
+                notify("TorTP", _("TorTP is already running"))
             elif e.code == 3:
                 notify("TorTP", _("Tor is not running"))
             else:
@@ -261,5 +265,9 @@ After TorTP starts be sure that Tor is working. """)
 
 
 if __name__ == "__main__":
+    check_if_running()
+    create_pid()
     icon = Icon()
     icon.start()
+
+os.remove("/tmp/tortp-gtk.pid")
