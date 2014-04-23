@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-02-06 18:14+0100\n"
+"POT-Creation-Date: 2014-02-09 00:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -103,3 +103,10 @@ msgstr "Si è verificato un errore mentre si verificava lo stato di TorTP"
 
 msgid "An error occurred while getting Tor infos"
 msgstr "Si è verificato un errore recuperando informazioni da Tor"
+
+#, python-format
+msgid "TorTP is already running with pid: %s"
+msgstr ""
+
+msgid "Tor Transparent Proxy"
+msgstr ""
