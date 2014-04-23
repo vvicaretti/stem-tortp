@@ -1,6 +1,6 @@
 .\" Manpage for TorTP.
 .\" Contact vinc3nt@riseup.net or paskao@hacari.org to correct errors.
-.TH man 1 "08 Feb 2014" "1.0" "tortp man page"
+.TH man 8 "08 Feb 2014" "1.0" "tortp man page"
 .SH NAME
 tortp \- create a Tor Transparent Proxy
 .SH SYNOPSIS
