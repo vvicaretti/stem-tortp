@@ -32,4 +32,5 @@ HowTo user TorTP:
 =================
 
 <code>$ sudo tortp -h</code>
-   
+
+<code>$ man tortp</code>
