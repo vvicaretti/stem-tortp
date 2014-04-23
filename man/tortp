@@ -1,0 +1,42 @@
+.\" Manpage for TorTP.
+.\" Contact vinc3nt@riseup.net or paskao@hacari.org to correct errors.
+.TH man 1 "08 Feb 2014" "1.0" "tortp man page"
+.SH NAME
+tortp \- create a Tor Transparent Proxy
+.SH SYNOPSIS
+tortp [OPTION]
+.SH DESCRIPTION
+TorTP will change your iptables configuration to force all TCP traffic (and DNS request) to pass through Tor. 
+
+The network traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped.
+
+TorTP use python-stem library for setup Transparen Proxy and DNS server capability on Tor, without override Tor default configuration file.
+
+Tor ControlPort enabled is mandatory requirement.
+.SH OPTIONS
+.TP
+.B "start" 
+start TorTP 
+.TP
+.B "stop"
+stop TorTP
+.TP
+.B "check"
+check if TorTP is working and return the current IP address
+.TP
+.B "info"
+To learn about the Tor relays you’re presently
+.br
+.SH SEE ALSO
+tor, iptables, python-stem
+.TP
+.B "stem"
+https://stem.torproject.org/
+.TP
+.B freepto
+http://www.freepto.mx
+.TP
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+vinc3nt (vinc3nt@riseup.net), paskao (paskao@hacari.net)
