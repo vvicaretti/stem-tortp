@@ -3,6 +3,9 @@
 # Update locales
 ./update-locales.sh
 
+# Update manpage
+gzip -c man/tortp > tortp.8.gz
+
 # Create a source distribution (tarball, zip file, etc.)
 python setup.py sdist
 
