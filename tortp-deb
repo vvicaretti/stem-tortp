@@ -5,7 +5,7 @@ Standards-Version: 3.9.2
 Package: tortp
 Version: 0.2-1
 Maintainer: vinc3nt <vinc3nt@riseup.net>
-Depends: tor, curl, python-tortp, dnsmasq, wipe
+Depends: tor, curl, python-tortp, dnsmasq, wipe, python-stem
 Files: tortp /usr/bin
 Description: TorTP will change your iptables configuration to force all traffic originating from a certain user to pass through Tor. 
  The traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped. 
