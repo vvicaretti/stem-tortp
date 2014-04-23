@@ -10,12 +10,14 @@ TorTP will change your iptables configuration to force all TCP traffic (and DNS 
 
 The network traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped.
 
-TorTP use python-stem library for setup Transparen Proxy and DNS server capability on Tor, without override Tor default configuration file.
+TorTP use python-stem library for setup Transparen Proxy and DNS server capability on Tor, without override Tor default configuration file, therefore the 
+Tor ControlPort enabled is mandatory requirement. 
 
-Tor ControlPort enabled is mandatory requirement. Should be enough decomment the following line from Tor configuration file (/etc/tor/torrc):
+In order to enable the ControlPort should be enough decomment the following line in Tor configuration file (/etc/tor/torrc):
 
-ControlPort 9051
-CookieAuthentication 1
+ - ControlPort 9051
+
+ - CookieAuthentication 1
 
 .SH OPTIONS
 .TP

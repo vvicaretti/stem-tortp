@@ -36,3 +36,6 @@ nosetests.xml
 .project
 .pydevproject
 MANIFEST
+
+# manpage
+tortp.8.gz
