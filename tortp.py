@@ -177,9 +177,14 @@ def check_tortp(myip, exit):
    Check if my IP is a Tor exit node
    """
    if system.is_running("tor"):
-      if myip not in exit['ipaddress']:
-         notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
+      try:
+         if myip not in exit['ipaddress']:
+            notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
+            sys.exit(1)
+      except stem.SocketError as exc:
+         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
          sys.exit(1)
+
       notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
       return myip
    else:
@@ -207,22 +212,26 @@ def get_exit():
    Get list of exit node from stem
    """
    if system.is_running("tor"):
-      with Controller.from_port(port = 9051) as controller:
-         controller.authenticate()
-         exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
-         count = -1
-         for circ in controller.get_circuits():
-            if circ.status != CircStatus.BUILT:
-               continue
-            exit_fp, exit_nickname = circ.path[-1]
-            exit_desc = controller.get_network_status(exit_fp, None)
-            exit_address = exit_desc.address if exit_desc else 'unknown'
-            count += 1
-            exit['count'].append(count)
-            exit['fingerprint'].append(exit_fp)
-            exit['nickname'].append(exit_nickname)
-            exit['ipaddress'].append(exit_address)
-      return exit
+      try:
+         with Controller.from_port(port = 9051) as controller:
+            controller.authenticate()
+            exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
+            count = -1
+            for circ in controller.get_circuits():
+               if circ.status != CircStatus.BUILT:
+                  continue
+               exit_fp, exit_nickname = circ.path[-1]
+               exit_desc = controller.get_network_status(exit_fp, None)
+               exit_address = exit_desc.address if exit_desc else 'unknown'
+               count += 1
+               exit['count'].append(count)
+               exit['fingerprint'].append(exit_fp)
+               exit['nickname'].append(exit_nickname)
+               exit['ipaddress'].append(exit_address)
+         return exit
+      except stem.SocketError as exc:
+         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+         sys.exit(1)
    else:
       notify("TorTP", "[!] Tor is not running")
 
@@ -246,7 +255,6 @@ def tor_new():
       stem.socket.ControlPort(port = 9051)
    except stem.SocketError as exc:
       notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
-      #TODO: sed remove comment
       sys.exit(1)
    with Controller.from_port(port = 9051) as controller:
       controller.authenticate()
@@ -262,7 +270,6 @@ def start(tortpdir):
          stem.socket.ControlPort(port = 9051)
       except stem.SocketError as exc:
          notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
-         #TODO: sed remove comment
          sys.exit(1)
       if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
          notify("TorTP", "[!] TorTP is already running")
