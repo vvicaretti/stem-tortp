@@ -6,12 +6,12 @@ tortp \- create a Tor Transparent Proxy
 .SH SYNOPSIS
 tortp [OPTION]
 .SH DESCRIPTION
-TorTP will change your iptables configuration to force all TCP traffic (and DNS request) to pass through Tor. 
+TorTP will change your iptables configuration to force all TCP traffic (and DNS request) to pass through Tor.
 
 The network traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped.
 
-TorTP use python-stem library for setup Transparen Proxy and DNS server capability on Tor, without override Tor default configuration file, therefore the 
-Tor ControlPort enabled is mandatory requirement. 
+TorTP use python-stem library for setup Transparent Proxy and DNS server capability on Tor, without override Tor default configuration file, therefore the 
+Tor ControlPort enabled is mandatory requirement.
 
 In order to enable the ControlPort should be enough decomment the following line in Tor configuration file (/etc/tor/torrc):
 
@@ -22,16 +22,19 @@ In order to enable the ControlPort should be enough decomment the following line
 .SH OPTIONS
 .TP
 .B "start" 
-start TorTP 
+Start TorTP 
 .TP
 .B "stop"
-stop TorTP
+Stop TorTP
 .TP
 .B "check"
-check if TorTP is working and return the current IP address
+Check if TorTP is working and return the current IP address
 .TP
 .B "info"
 To learn about the Tor relays you’re presently
+.TB
+.B "new"
+To create a new Tor circuit
 .br
 .SH SEE ALSO
 tor, iptables, python-stem
