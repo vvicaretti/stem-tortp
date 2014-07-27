@@ -36,9 +36,8 @@ def check_user():
    """
    Only root can do that!
    """
-   uid = subprocess.Popen(['id', '-u'], stdout = subprocess.PIPE)
-   out = uid.stdout.read()
-   if int(out) == 0:
+   uid = os.getuid()
+   if uid == 0:
       return os.environ['SUDO_UID']
    else:
       notify("TorTP", "[!] Only root can do that!")
@@ -49,8 +48,7 @@ def get_toruser():
     Get tor username
     """
     pid = system.get_pid_by_name("tor")
-    # TODO: toruser = stem.util.system.get_user(pid)
-    toruser = "debian-tor"
+    toruser = system.get_user(pid)
     return toruser
 
 def get_home(user):
