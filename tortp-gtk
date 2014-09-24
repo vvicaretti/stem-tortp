@@ -51,6 +51,17 @@ def create_pid():
     pidfile.write("%s" % os.getpid())
     pidfile.close
 
+def show_about_dialog(widget, data=None):
+    about_dialog = gtk.AboutDialog()
+    about_dialog.set_destroy_with_parent(True)
+    about_dialog.set_name("Tor Transparent Proxy")
+    about_dialog.set_website("https://github.com/AvANa-BBS/stem-tortp")
+    about_dialog.set_version("0.2")
+    about_dialog.set_authors(["vinc3nt (vinc3nt@riseup.net)", "paskao (paskao@hacari.org)"])
+    about_dialog.run()
+    about_dialog.destroy()
+
+
 
 class Icon(gtk.StatusIcon):
 
@@ -72,6 +83,7 @@ class Icon(gtk.StatusIcon):
     def load(self, param):
         if self.window is None:
             self.window = MainWindow()
+            self.window.resize(500, 300)
             self.window.connect("destroy", self.clear_window)
 
     def clear_window(self, widget, data=None):
@@ -82,7 +94,7 @@ class Icon(gtk.StatusIcon):
         about = gtk.MenuItem(_("About"))
         quit = gtk.MenuItem(_("Quit"))
 
-        about.connect("activate", self.show_about_dialog)
+        about.connect("activate", show_about_dialog)
         quit.connect("activate", gtk.main_quit)
 
         menu.append(about)
@@ -90,43 +102,66 @@ class Icon(gtk.StatusIcon):
         menu.show_all()
         menu.popup(None, None, gtk.status_icon_position_menu, button, time, self)
 
-    def show_about_dialog(self, widget):
-        about_dialog = gtk.AboutDialog()
-        about_dialog.set_destroy_with_parent(True)
-        about_dialog.set_name("Tor Transparent Proxy")
-        about_dialog.set_website("https://github.com/AvANa-BBS/stem-tortp")
-        about_dialog.set_version("0.2")
-        about_dialog.set_authors(["vinc3nt (vinc3nt@riseup.net)", "paskao (paskao@hacari.org)"])
-
-        about_dialog.run()
-        about_dialog.destroy()
 
 
 class MainWindow(gtk.Window):
 
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        self.set_border_width(10)
         self.set_icon_from_file('/usr/share/pixmaps/anonymous.ico')
 
-        box = gtk.VBox(False, 0)
+        menu_bar = gtk.MenuBar()
+        menu_bar.append(self.get_file_menu())
+        menu_bar.append(self.get_help_menu())
+
         notebook = gtk.Notebook()
-        box.add(notebook)
+
+        box = gtk.VBox(False)
+        box.pack_start(menu_bar, 0)
+        box.pack_start(notebook, 6)
         self.add(box)
 
+        # Adding tabs
         tp = TransparentProxyBox()
         label = gtk.Label(_("Tor Transparent Proxy"))
         notebook.append_page(tp, label)
 
+        info_box = self.get_info_box()
+        label_info = gtk.Label(_("Infos"))
+        notebook.append_page(info_box, label_info)
+
+        self.show_all()
+
+    def get_file_menu(self):
+        menu = gtk.MenuItem('File')
+        submenu = gtk.Menu()
+
+        exit = gtk.ImageMenuItem(gtk.STOCK_QUIT, _('Exit'))
+        exit.connect('activate', gtk.main_quit)
+
+        menu.set_submenu(submenu)
+        submenu.append(exit)
+        return menu
+
+    def get_help_menu(self):
+        menu = gtk.MenuItem(_('Help'))
+        submenu = gtk.Menu()
+
+        about = gtk.ImageMenuItem(gtk.STOCK_ABOUT, _('About'))
+        about.connect('activate', show_about_dialog)
+
+        menu.set_submenu(submenu)
+        submenu.append(about)
+        return menu
+
+    def get_info_box(self):
         tpinfo = TransparentProxyInfoBox()
         tpinfo.set_scroll_adjustments(None, None)
         scroll = gtk.ScrolledWindow()
         scroll.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
         scroll.add_with_viewport(tpinfo)
-        label_info = gtk.Label(_("Infos"))
-        notebook.append_page(scroll, label_info)
+        return scroll
 
-        self.show_all()
 
 
 class TransparentProxyInfoBox(gtk.VBox):
