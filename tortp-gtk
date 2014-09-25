@@ -31,7 +31,7 @@ def check_if_running():
     """
     Check if TorTP-GTK is already running
     """
-    if os.path.exists("/tmp/tortp-gtk.pid"):
+    if os.path.exists("/var/run/tortp-gtk.pid"):
         notify("TorTP", _("TorTP is already running with pid: %s" % get_pid()))
         sys.exit(2)
 
@@ -39,7 +39,7 @@ def get_pid():
     """
     Get TorTP-GTK pid
     """
-    p = open("/tmp/tortp-gtk.pid", "r")
+    p = open("/var/run/tortp-gtk.pid", "r")
     pid = p.read()
     return pid
 
@@ -47,7 +47,7 @@ def create_pid():
     """
     Create TorTP-GTK pidfile
     """
-    pidfile = open("/tmp/tortp-gtk.pid", "w")
+    pidfile = open("/var/run/tortp-gtk.pid", "w")
     pidfile.write("%s" % os.getpid())
     pidfile.close
 
@@ -346,4 +346,4 @@ if __name__ == "__main__":
     icon = Icon()
     icon.start()
 
-os.remove("/tmp/tortp-gtk.pid")
+os.remove("/var/run/tortp-gtk.pid")
