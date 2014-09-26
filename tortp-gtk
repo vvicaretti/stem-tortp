@@ -348,13 +348,10 @@ When you use TorTP your location is hide by the Tor network, increasing the anon
             notify("TorTP", _("An error occurred while checking TorTP"))
 
 
-if __name__ == "__main__":
-    try:
-        check_if_running()
-        create_pid()
-        icon = Icon()
-        icon.start()
-    except KeyboardInterrupt:
-        cleanup
-
 atexit.register(cleanup)
+
+if __name__ == "__main__":
+    check_if_running()
+    create_pid()
+    icon = Icon()
+    icon.start()
