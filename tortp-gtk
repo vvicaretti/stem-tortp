@@ -249,9 +249,9 @@ class TransparentProxyBox(gtk.VBox):
 
         # Create description
         self.description_text = _("""<b>What's TortTP?</b>\n
-TorTP is a paranoia application that redirects all TCP ad UDP (dns) traffic generated from your computer to the Tor network in a transparent way.\n
+TorTP is a paranoia application that prevents any traffic to be leaked out of Tor\n
 <b>Why I should use TorTP?</b>\n
-When you use TorTP your location is hide by the Tor network, increasing the anonymity of your Internet activity.""")
+Although TorBrowser is the best solution for web browsing, sometimes you want to make sure that no traffic get leaked out of your system.""")
         self.description = gtk.Label()
         self.description.set_markup(self.description_text)
         self.description.set_line_wrap(True)
