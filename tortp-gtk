@@ -57,7 +57,6 @@ def cleanup():
     remove TorTP-GTK pidfile
     """
     os.remove('/var/run/tortp-gtk.pid')
-    sys.exit(0)
 
 def show_about_dialog(widget, data=None):
     """
