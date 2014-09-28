@@ -66,7 +66,7 @@ def show_about_dialog(widget, data=None):
     about_dialog.set_destroy_with_parent(True)
     about_dialog.set_name("Tor Transparent Proxy")
     about_dialog.set_website("https://github.com/AvANa-BBS/stem-tortp")
-    about_dialog.set_version("0.2")
+    about_dialog.set_version("0.4")
     about_dialog.set_authors(["vinc3nt (vinc3nt@riseup.net)", "paskao (paskao@hacari.org)"])
     about_dialog.run()
     about_dialog.destroy()

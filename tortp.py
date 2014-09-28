@@ -94,7 +94,7 @@ def wipe_tor_log():
    devnull = open(os.devnull,"w")
    wipelog = subprocess.call(["wipe", "-f", "-s", "-q", "/var/log/tor/log"],stdout=devnull,stderr=subprocess.STDOUT)
    if wipelog == 0:
-       notify("TorTP", "[+] Wiped log")
+       notify("TorTP", "[+] Log wiped")
    devnull.close()
 
 def iptables_clean():

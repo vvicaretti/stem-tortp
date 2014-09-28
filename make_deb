@@ -23,7 +23,7 @@ debuild
 
 # Coping deb package in main directory
 cd ../../../
-cp dist/deb_dist/python-tortp_*.deb .
+mv dist/deb_dist/python-tortp_*.deb .
 
 # Build tortp and tortp-gtk
 equivs-build tortp-deb
