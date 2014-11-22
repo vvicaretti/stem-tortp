@@ -14,7 +14,7 @@ Add freepto repository:
 
 <code>$ cat deb.gpg | apt-key add -</code>
 
-<code>$ echo "deb http://deb.freepto.mx/freepto berenjena main" > /etc/apt/sources.list.d/freepto.list</code>
+<code>$ echo "deb http://deb.freepto.mx/freeptorepo berenjena main" > /etc/apt/sources.list.d/freepto.list</code>
 
 Install:
 
