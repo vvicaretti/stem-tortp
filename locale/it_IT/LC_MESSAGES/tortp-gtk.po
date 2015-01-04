@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: tortp-gtk 1.1\n"
 "Report-Msgid-Bugs-To: paskao@hacari.org\n"
-"POT-Creation-Date: 2014-02-09 00:50+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2015-01-04 14:27+0100\n"
+"PO-Revision-Date: 2015-01-04 14:32+0100\n"
+"Last-Translator: boyska <piuttosto@logorroici.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language: it_IT\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.1\n"
 
 msgid "About"
 msgstr "Informazioni"
@@ -30,10 +30,10 @@ msgid "Infos"
 msgstr "Informazioni"
 
 msgid "Fingerprint"
-msgstr ""
+msgstr "Fingerprint"
 
 msgid "Nickname"
-msgstr ""
+msgstr "Nickname"
 
 msgid "IP address"
 msgstr "Indirizzo IP"
@@ -64,7 +64,7 @@ msgstr "Tor Transparent Proxy attivato"
 
 #, python-format
 msgid "Unable to connect to port 9051 (%s)"
-msgstr "Non è possibile connettersi alla porta 9551 (%s)"
+msgstr "Non è possibile connettersi alla porta 9051 (%s)"
 
 msgid "TorTP is already running"
 msgstr "TorTP è già avviato"
@@ -106,7 +106,37 @@ msgstr "Si è verificato un errore recuperando informazioni da Tor"
 
 #, python-format
 msgid "TorTP is already running with pid: %s"
-msgstr ""
+msgstr "Tor è già avviato con pid: %s"
 
 msgid "Tor Transparent Proxy"
+msgstr "Tor Transparent Proxy"
+
+msgid "Exit"
+msgstr "Esci"
+
+msgid "Help"
+msgstr "Aiuto"
+
+msgid ""
+"<b>What's TortTP?</b>\n"
+"\n"
+"TorTP is a paranoia application that prevents any traffic to be leaked out "
+"of Tor\n"
+"\n"
+"<b>Why I should use TorTP?</b>\n"
+"\n"
+"Although TorBrowser is the best solution for web browsing, sometimes you "
+"want to make sure that no traffic get leaked out of your system."
 msgstr ""
+"<b>Cos'è TorTP?</b>\n"
+"\n"
+"TorTP è un'applicazione di sicurezza che evita che dal tuo computer esca "
+"traffico che non passa tramite Tor\n"
+"\n"
+"<b>Perché dovrei usare TorTP?</b>\n"
+"\n"
+"TorBrowser è la migliore soluzione per la navigazione web, ma a volte vuoi "
+"essere sicuro che nessun traffico esca in chiaro da altri programmi."
+
+msgid "Use new circuit"
+msgstr "Usa un nuovo circuito"
