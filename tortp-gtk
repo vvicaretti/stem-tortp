@@ -248,7 +248,7 @@ class TransparentProxyBox(gtk.VBox):
         gtk.VBox.__init__(self)
 
         # Create description
-        self.description_text = _("""<b>What's TortTP?</b>\n
+        self.description_text = _("""<b>What's TorTP?</b>\n
 TorTP is a paranoia application that prevents any traffic to be leaked out of Tor\n
 <b>Why I should use TorTP?</b>\n
 Although TorBrowser is the best solution for web browsing, sometimes you want to make sure that no traffic get leaked out of your system.""")
