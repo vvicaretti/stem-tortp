@@ -38,7 +38,7 @@ def check_user():
    """
    uid = os.getuid()
    if uid == 0:
-      return os.environ['SUDO_UID']
+      return os.environ.get('SUDO_UID', 0)
    else:
       notify("TorTP", "[!] Only root can do that!")
       sys.exit(1)
