@@ -1,0 +1,18 @@
+Source: tortp
+Section: net
+Priority: optional
+Maintainer: Freepto developers <freepto@autistici.org>
+Homepage: https://github.com/avana-bbs/stem-tortp
+Vcs-Browser: https://github.com/avana-bbs/stem-tortp
+Vcs-Git: https://github.com/avana-bbs/stem-tortp.git
+Build-Depends: debhelper (>= 9), python, python-distutils-extra
+# Build-Depends: debhelper (>= 9), python-support, python-distutils-extra, txt2tags
+Standards-Version: 3.9.1.0
+
+Package: tortp
+Architecture: all
+Depends: ${misc:Depends}, ${python:Depends}, python-gtk2
+Suggests: tortp-gtk
+Description: automatically redirect traffic to Tor
+ The base library for redirecting traffic to Tor.
+ .
