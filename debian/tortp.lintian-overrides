@@ -1,0 +1,3 @@
+# We use the Paranoid category, which is not "standard", but in Freepto it is provided
+# Since this is an additional category, it cannot hurt
+tortp binary: desktop-entry-invalid-category
