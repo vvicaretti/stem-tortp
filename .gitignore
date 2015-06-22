@@ -39,3 +39,4 @@ MANIFEST
 
 # manpage
 tortp.8.gz
+.*.swp
