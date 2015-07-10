@@ -12,9 +12,9 @@ Standards-Version: 3.9.4
 Package: tortp
 Architecture: all
 Depends: ${misc:Depends}, ${python:Depends}, python-gtk2
-Provides: tortp-gtk
-Conflicts: tortp-gtk
-Replaces: tortp-gtk
+Provides: tortp-gtk, python-tortp
+Conflicts: tortp-gtk, python-tortp
+Replaces: tortp-gtk, python-tortp
 Description: automatically redirect traffic to Tor
  The base library for redirecting traffic to Tor.
  .
