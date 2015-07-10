@@ -1,3 +1,9 @@
+tortp (0.5) wheezy; urgency=medium
+
+  * Bump version after debian packaging
+
+ -- freepto devs <freepto@autistici.org>  Fri, 10 Jul 2015 23:23:51 +0200
+
 tortp (0.4) wheezy; urgency=low
 
   * Initial release.
