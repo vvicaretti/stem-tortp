@@ -1,4 +1,0 @@
-stem==1.0.1
-# pynotify
-# urllib
-# re
