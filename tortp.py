@@ -47,7 +47,7 @@ def get_toruser():
     """
     Get tor username
     """
-    pid = system.get_pid_by_name("tor")
+    pid = system.get_pid_by_port(9050)
     toruser = system.get_user(pid)
     return toruser
 
