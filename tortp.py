@@ -80,22 +80,8 @@ def check_sys_dependencies():
    if tor != 0:
       notify("TorTP", "[!] Tor is not installed")
       sys.exit(1)
-   wipe = subprocess.call(["dpkg", "-s", "wipe"],stdout=devnull,stderr=subprocess.STDOUT)
-   if wipe != 0:
-       notify("TorTP", "[!] Wipe is not installed")
-       sys.exit(1)
    devnull.close()
 
-
-def wipe_tor_log():
-   """
-   Remove Tor logs when TorTP is closed
-   """
-   devnull = open(os.devnull,"w")
-   wipelog = subprocess.call(["wipe", "-f", "-s", "-q", "/var/log/tor/log"],stdout=devnull,stderr=subprocess.STDOUT)
-   if wipelog == 0:
-       notify("TorTP", "[+] Log wiped")
-   devnull.close()
 
 def iptables_clean():
    """
@@ -189,22 +175,6 @@ def check_tortp(myip, exit):
       notify("TorTP", "[!] Tor is not running")
       sys.exit(3)
 
-def enable_tordns():
-   """
-   Use Tor ControlPort for enable TorDNS
-   """
-   with Controller.from_port(port = 9051) as controller:
-      controller.authenticate()
-      controller.set_options({"DNSPort": "9053", "DNSListenAddress": "127.0.0.1", "AutomapHostsOnResolve": "1", "AutomapHostsSuffixes": ".exit,.onion"})
-
-def enable_torproxy():
-   """
-   Use Tor ControlPort for enable Tor Transparent Proxy
-   """
-   with Controller.from_port(port = 9051) as controller:
-      controller.authenticate()
-      controller.set_options({"VirtualAddrNetwork": "10.192.0.0/10", "TransPort": "9040", "TransListenAddress": "127.0.0.1","AvoidDiskWrites": "1", "WarnUnsafeSocks": "1"})
-
 def get_exit():
    """
    Get list of exit node from stem
@@ -259,34 +229,55 @@ def tor_new():
       controller.signal(stem.Signal.NEWNYM)
       notify("TorTP", "[+] New Tor circuit created")
 
+def tor_new_process():
+    curr_uid = os.getuid()
+    #print("Current uid: ", curr_uid)
+    """
+    Changing to debian-tor (E)UID and (E)GUID
+    and start a new tor process
+    """
+    debian_tor_uid = getpwnam('debian-tor').pw_uid
+    debian_tor_gid = getpwnam('debian-tor').pw_gid
+    os.setgid(debian_tor_gid)
+    os.setuid(debian_tor_uid)
+    os.setegid(debian_tor_gid)
+    os.seteuid(debian_tor_uid)
+    #print debian_tor_uid
+    os.environ['HOME'] = "/var/lib/tor"
+
+    tor_process = stem.process.launch_tor_with_config(
+      config = {
+        'SocksPort': '6666',
+        'DNSPort': '9053',
+        'DNSListenAddress': '127.0.0.1',
+        'AutomapHostsOnResolve': '1',
+        'AutomapHostsSuffixes': '.exit,.onion',
+        'VirtualAddrNetwork': '10.192.0.0/10',
+        'TransPort': '9040',
+        'TransListenAddress': '127.0.0.1',
+        'AvoidDiskWrites': '1',
+        'WarnUnsafeSocks': '1',
+      })
+
+
 def start(tortpdir):
    """
    Start TorTP
    """
-   if system.is_running("tor"):
-      try:
-         stem.socket.ControlPort(port = 9051)
-      except stem.SocketError as exc:
-         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
-         sys.exit(1)
-      if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
-         notify("TorTP", "[!] TorTP is already running")
-         sys.exit(2)
-      else:
-         check_sys_dependencies()
-         iptables_clean()
-         iptables_up(tortpdir, get_toruser())
-         enable_tordns()
-         enable_torproxy()
-         resolvconf(tortpdir)
-         dnsmasq(tortpdir)
-         devnull = open(os.devnull,"w")
-         subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-         devnull.close()
-         notify("TorTP", "[+] Tor Transparent Proxy enabled")
-   else:
-      notify("TorTP", "[!] Tor is not running")
-      sys.exit(3)
+  if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
+     notify("TorTP", "[!] TorTP is already running")
+     sys.exit(2)
+  else:
+     check_sys_dependencies()
+     iptables_clean()
+     iptables_up(tortpdir, get_toruser())
+     resolvconf(tortpdir)
+     dnsmasq(tortpdir)
+     devnull = open(os.devnull,"w")
+     subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
+     devnull.close()
+     tor_new_process()
+     notify("TorTP", "[+] Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
    """
@@ -302,11 +293,9 @@ def stop(tortpdir):
       sys.exit(1)
    devnull = open(os.devnull,"w")
    subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-   subprocess.call(['/etc/init.d/tor', 'reload'], stdout=devnull)
    devnull.close()
    iptables_down(tortpdir)
    notify("TorTP", "[+] Tor Transparent Proxy disabled")
-   wipe_tor_log()
 
 def is_running():
    """

@@ -10,7 +10,7 @@ Standards-Version: 3.9.4
 
 Package: tortp
 Architecture: all
-Depends: ${misc:Depends}, ${python:Depends}, python-gtk2, python-stem, wipe
+Depends: ${misc:Depends}, ${python:Depends}, python-gtk2, python-stem
 Provides: tortp-gtk, python-tortp
 Conflicts: tortp-gtk, python-tortp
 Replaces: tortp-gtk, python-tortp
