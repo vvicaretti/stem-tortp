@@ -47,7 +47,7 @@ def get_toruser():
     """
     Get tor username
     """
-    pid = system.get_pid_by_port(9050)
+    pid = system.get_pid_by_port(6666)
     toruser = system.get_user(pid)
     return toruser
 
@@ -242,7 +242,6 @@ def tor_new_process():
     os.setuid(debian_tor_uid)
     os.setegid(debian_tor_gid)
     os.seteuid(debian_tor_uid)
-    #print debian_tor_uid
     os.environ['HOME'] = "/var/lib/tor"
 
     tor_process = stem.process.launch_tor_with_config(
@@ -261,23 +260,23 @@ def tor_new_process():
 
 
 def start(tortpdir):
-   """
-   Start TorTP
-   """
-  if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
-     notify("TorTP", "[!] TorTP is already running")
-     sys.exit(2)
-  else:
-     check_sys_dependencies()
-     iptables_clean()
-     iptables_up(tortpdir, get_toruser())
-     resolvconf(tortpdir)
-     dnsmasq(tortpdir)
-     devnull = open(os.devnull,"w")
-     subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-     devnull.close()
-     tor_new_process()
-     notify("TorTP", "[+] Tor Transparent Proxy enabled")
+    """
+    Start TorTP
+    """
+    if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
+        notify("TorTP", "[!] TorTP is already running")
+        sys.exit(2)
+    else:
+        check_sys_dependencies()
+        iptables_clean()
+        iptables_up(tortpdir, get_toruser())
+        resolvconf(tortpdir)
+        dnsmasq(tortpdir)
+        devnull = open(os.devnull,"w")
+        subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
+        devnull.close()
+        tor_new_process()
+        notify("TorTP", "[+] Tor Transparent Proxy enabled")
 
 def stop(tortpdir):
    """
