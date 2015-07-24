@@ -1,13 +1,9 @@
 #!/usr/bin/env python
 
 """
-TorTP is a simple way to implement
-Tor Transparent Proxy in our GNU/Linux Box
+TorTP is a simple way to implement Tor Transparent Proxy in your GNU/Linux Box
 
-TorTP use Tor's control port for setup
-Transparen Proxy and DNS server capability
-on TOR, without override default configuration file
-with a custom torrc
+TorTP use Tor stem library for setup Transparen Proxy and DNS server capabilities on Tor
 """
 
 import subprocess
@@ -21,9 +17,9 @@ import stem.process
 from stem import CircStatus
 from shutil import copy2
 import sys
-import pwd
 import urllib
 import re
+from pwd import getpwnam, getpwuid
 
 def notify(title, message):
     """
@@ -43,19 +39,11 @@ def check_user():
       notify("TorTP", "[!] Only root can do that!")
       sys.exit(1)
 
-def get_toruser():
-    """
-    Get tor username
-    """
-    pid = system.get_pid_by_port(6666)
-    toruser = system.get_user(pid)
-    return toruser
-
 def get_home(user):
    """
    Get user home path
    """
-   return pwd.getpwuid(int(user))[5]
+   return getpwuid(int(user))[5]
 
 def tortp_dir(home):
    """
@@ -94,8 +82,8 @@ def iptables_clean():
 
 def iptables_up(tortpdir, toruser):
    """
-   This function make backup and add iptables rules for redirect all network traffic to TorTP.
-   Only except with debian-tor user.
+   This function make configuration backups and add iptables rules in order to redirect all network traffic through TorTP.
+   Only except for Tor user.
    """
    ipt = open("%s/iptables.txt" % tortpdir, "w")
    subprocess.call(['iptables-save'], stdout=ipt)
@@ -108,7 +96,7 @@ def iptables_up(tortpdir, toruser):
    subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '-j', 'REDIRECT', '--to-ports', '9040'])
    subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--dport', '9040', '-j', 'ACCEPT'])
    subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '!', '-o', 'lo', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-j', 'DROP'])
-   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '9051', '-j', 'ACCEPT'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--syn', '-d', '127.0.0.1', '--dport', '6969', '-j', 'ACCEPT'])
 
 def iptables_down(tortpdir):
    """
@@ -160,28 +148,20 @@ def check_tortp(myip, exit):
    """
    Check if my IP is a Tor exit node
    """
-   if system.is_running("tor"):
-      try:
-         if myip not in exit['ipaddress']:
-            notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
-            sys.exit(1)
-      except stem.SocketError as exc:
-         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
-         sys.exit(1)
-
+   if myip in exit['ipaddress']:
       notify("TorTP", "[+] Congratulations. TorTP is working: %s" % myip)
-      return myip
    else:
-      notify("TorTP", "[!] Tor is not running")
-      sys.exit(3)
+      notify("TorTP", "[-] Sorry. TorTP is not working: %s" % myip)
+      sys.exit(1)
+   return myip
 
-def get_exit():
+def get_exit(is_running):
    """
    Get list of exit node from stem
    """
-   if system.is_running("tor"):
+   if is_running:
       try:
-         with Controller.from_port(port = 9051) as controller:
+         with Controller.from_port(port = 6969) as controller:
             controller.authenticate()
             exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
             count = -1
@@ -198,7 +178,7 @@ def get_exit():
                exit['ipaddress'].append(exit_address)
          return exit
       except stem.SocketError as exc:
-         notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+         notify("TorTP", "[!] Unable to connect to port 6969 (%s)" % exc)
          sys.exit(1)
    else:
       notify("TorTP", "[!] Tor is not running")
@@ -220,24 +200,22 @@ def tor_new():
    Create a new tor circuit
    """
    try:
-      stem.socket.ControlPort(port = 9051)
+      stem.socket.ControlPort(port = 6969)
    except stem.SocketError as exc:
-      notify("TorTP", "[!] Unable to connect to port 9051 (%s)" % exc)
+      notify("TorTP", "[!] Unable to connect to port 6969 (%s)" % exc)
       sys.exit(1)
-   with Controller.from_port(port = 9051) as controller:
+   with Controller.from_port(port = 6969) as controller:
       controller.authenticate()
       controller.signal(stem.Signal.NEWNYM)
       notify("TorTP", "[+] New Tor circuit created")
 
 def tor_new_process():
     curr_uid = os.getuid()
-    #print("Current uid: ", curr_uid)
     """
-    Changing to debian-tor (E)UID and (E)GUID
-    and start a new tor process
+    Drops privileges to debian-tor user and start a new Tor process
     """
-    debian_tor_uid = getpwnam('debian-tor').pw_uid
-    debian_tor_gid = getpwnam('debian-tor').pw_gid
+    debian_tor_uid = getpwnam("debian-tor").pw_uid
+    debian_tor_gid = getpwnam("debian-tor").pw_gid
     os.setgid(debian_tor_gid)
     os.setuid(debian_tor_uid)
     os.setegid(debian_tor_gid)
@@ -247,6 +225,7 @@ def tor_new_process():
     tor_process = stem.process.launch_tor_with_config(
       config = {
         'SocksPort': '6666',
+        'ControlPort': '6969',
         'DNSPort': '9053',
         'DNSListenAddress': '127.0.0.1',
         'AutomapHostsOnResolve': '1',
@@ -269,7 +248,7 @@ def start(tortpdir):
     else:
         check_sys_dependencies()
         iptables_clean()
-        iptables_up(tortpdir, get_toruser())
+        iptables_up(tortpdir, "debian-tor")
         resolvconf(tortpdir)
         dnsmasq(tortpdir)
         devnull = open(os.devnull,"w")
@@ -300,7 +279,6 @@ def is_running():
    """
    check if TorTP is running
    """
-   #TODO: change check
    path = tortp_dir(get_home(check_user()))
    file_path = os.path.join(path, "resolv.conf")
    return os.path.exists(file_path)
@@ -312,4 +290,4 @@ def do_stop():
    stop(tortp_dir(get_home(check_user())))
 
 def do_check():
-   return check_tortp(myip(), get_exit())
+   return check_tortp(myip(), get_exit(is_running())
