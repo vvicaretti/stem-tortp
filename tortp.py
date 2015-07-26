@@ -12,7 +12,6 @@ import stem
 from stem.control import Controller
 from stem.version import get_system_tor_version
 import stem.util
-from stem.util import system
 import stem.process
 from stem import CircStatus
 from shutil import copy2
@@ -210,7 +209,6 @@ def tor_new():
       notify("TorTP", "[+] New Tor circuit created")
 
 def tor_new_process():
-    curr_uid = os.getuid()
     """
     Drops privileges to debian-tor user and start a new Tor process
     """
@@ -273,6 +271,7 @@ def stop(tortpdir):
    subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
    devnull.close()
    iptables_down(tortpdir)
+   # TODO stop the tor process created
    notify("TorTP", "[+] Tor Transparent Proxy disabled")
 
 def is_running():
