@@ -290,4 +290,4 @@ def do_stop():
    stop(tortp_dir(get_home(check_user())))
 
 def do_check():
-   return check_tortp(myip(), get_exit(is_running())
+   return check_tortp(myip(), get_exit(is_running()))
