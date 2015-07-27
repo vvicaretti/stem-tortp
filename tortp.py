@@ -181,6 +181,7 @@ def get_exit(is_running):
          sys.exit(1)
    else:
       notify("TorTP", "[!] Tor is not running")
+      sys.exit(0)
 
 
 def exit_info(exit):
