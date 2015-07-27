@@ -15,7 +15,7 @@ def main(arg):
       tortp.tor_new()
    if args.do == "info":
       tortp.check_user()
-      tortp.exit_info(tortp.get_exit())
+      tortp.exit_info(tortp.get_exit(tortp.is_running()))
    if args.do == "check":
       tortp.check_user()
       tortp.do_check()
