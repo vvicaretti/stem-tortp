@@ -11,7 +11,7 @@ import os
 import stem
 from stem.control import Controller
 from stem.version import get_system_tor_version
-import stem.util
+from stem.util import system
 import stem.process
 from stem import CircStatus
 from shutil import copy2
@@ -272,7 +272,7 @@ def stop(tortpdir):
    subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
    devnull.close()
    iptables_down(tortpdir)
-   # TODO stop the tor process created
+   os.kill(system.get_pid_by_port(6969), 2)
    notify("TorTP", "[+] Tor Transparent Proxy disabled")
 
 def is_running():
