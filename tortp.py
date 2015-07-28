@@ -13,7 +13,6 @@ from stem.control import Controller
 from stem.version import get_system_tor_version
 from stem.util import system
 import stem.process
-from stem import CircStatus
 from shutil import copy2
 import sys
 import urllib
@@ -165,7 +164,7 @@ def get_exit(is_running):
             exit = {'count': [], 'fingerprint': [], 'nickname': [], 'ipaddress': []}
             count = -1
             for circ in controller.get_circuits():
-               if circ.status != CircStatus.BUILT:
+               if circ.status != stem.CircStatus.BUILT:
                   continue
                exit_fp, exit_nickname = circ.path[-1]
                exit_desc = controller.get_network_status(exit_fp, None)
