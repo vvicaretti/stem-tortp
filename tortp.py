@@ -58,11 +58,11 @@ def check_sys_dependencies():
    Check if all dependencies are installed
    """
    devnull = open(os.devnull,"w")
-   dnsmasq = subprocess.call(["dpkg","-s","dnsmasq"],stdout=devnull,stderr=subprocess.STDOUT)
+   dnsmasq = subprocess.call(["which","dnsmasq"],stdout=devnull,stderr=subprocess.STDOUT)
    if dnsmasq != 0:
       notify("TorTP", "[!] Dnsmasq is not installed")
       sys.exit(1)
-   tor = subprocess.call(["dpkg","-s","tor"],stdout=devnull,stderr=subprocess.STDOUT)
+   tor = subprocess.call(["which","tor"],stdout=devnull,stderr=subprocess.STDOUT)
    if tor != 0:
       notify("TorTP", "[!] Tor is not installed")
       sys.exit(1)
