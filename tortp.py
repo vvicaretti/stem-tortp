@@ -19,6 +19,8 @@ import urllib
 import re
 from pwd import getpwnam, getpwuid
 
+TOR_USER = 'debian-tor'
+
 def notify(title, message):
     """
     Notification system
@@ -210,10 +212,10 @@ def tor_new():
 
 def tor_new_process():
     """
-    Drops privileges to debian-tor user and start a new Tor process
+    Drops privileges to TOR_USER user and start a new Tor process
     """
-    debian_tor_uid = getpwnam("debian-tor").pw_uid
-    debian_tor_gid = getpwnam("debian-tor").pw_gid
+    debian_tor_uid = getpwnam(TOR_USER).pw_uid
+    debian_tor_gid = getpwnam(TOR_USER).pw_gid
     os.setgid(debian_tor_gid)
     os.setuid(debian_tor_uid)
     os.setegid(debian_tor_gid)
@@ -246,7 +248,7 @@ def start(tortpdir):
     else:
         check_sys_dependencies()
         iptables_clean()
-        iptables_up(tortpdir, "debian-tor")
+        iptables_up(tortpdir, TOR_USER)
         resolvconf(tortpdir)
         dnsmasq(tortpdir)
         devnull = open(os.devnull,"w")
