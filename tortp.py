@@ -60,10 +60,6 @@ def check_sys_dependencies():
    Check if all dependencies are installed
    """
    devnull = open(os.devnull,"w")
-   dnsmasq = subprocess.call(["which","dnsmasq"],stdout=devnull,stderr=subprocess.STDOUT)
-   if dnsmasq != 0:
-      notify("TorTP", "[!] Dnsmasq is not installed")
-      sys.exit(1)
    tor = subprocess.call(["which","tor"],stdout=devnull,stderr=subprocess.STDOUT)
    if tor != 0:
       notify("TorTP", "[!] Tor is not installed")
@@ -121,19 +117,6 @@ def resolvconf(tortpdir):
    resolv.write('nameserver 127.0.0.1\n')
    resolv.close()
 
-def dnsmasq(tortpdir):
-   """
-   Backup and modify dnsmasq configuration file
-   """
-   try:
-      copy2("/etc/dnsmasq.conf",tortpdir)
-   except IOError as e:
-      print e
-   dmasq = open('/etc/dnsmasq.conf', 'w')
-   dmasq.write('no-resolv\n')
-   dmasq.write('server=127.0.0.1#9053\n')
-   dmasq.write('listen-address=127.0.0.1\n')
-   dmasq.close()
 
 def myip():
    """
@@ -242,7 +225,7 @@ def start(tortpdir):
     """
     Start TorTP
     """
-    if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/dnsmasq.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
+    if os.path.exists("%s/resolv.conf" % tortpdir) and os.path.exists("%s/iptables.txt" % tortpdir):
         notify("TorTP", "[!] TorTP is already running")
         sys.exit(2)
     else:
@@ -250,10 +233,6 @@ def start(tortpdir):
         iptables_clean()
         iptables_up(tortpdir, TOR_USER)
         resolvconf(tortpdir)
-        dnsmasq(tortpdir)
-        devnull = open(os.devnull,"w")
-        subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-        devnull.close()
         tor_new_process()
         notify("TorTP", "[+] Tor Transparent Proxy enabled")
 
@@ -263,15 +242,10 @@ def stop(tortpdir):
    """
    try:
       copy2("%s/resolv.conf" % tortpdir, "/etc")
-      copy2("%s/dnsmasq.conf" % tortpdir, "/etc")
       os.remove("%s/resolv.conf" % tortpdir)
-      os.remove("%s/dnsmasq.conf" % tortpdir)
    except IOError:
       notify("TorTP", "[!] TorTP seems already disabled")
       sys.exit(1)
-   devnull = open(os.devnull,"w")
-   subprocess.call(['/etc/init.d/dnsmasq', 'restart'], stdout=devnull)
-   devnull.close()
    iptables_down(tortpdir)
    os.kill(system.get_pid_by_port(6969), 2)
    notify("TorTP", "[+] Tor Transparent Proxy disabled")
