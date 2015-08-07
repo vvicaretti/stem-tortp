@@ -85,7 +85,7 @@ def iptables_up(tortpdir, toruser):
    subprocess.call(['iptables-save'], stdout=ipt)
    ipt.close()
    # Redirect DNSTor port (9053)
-   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'udp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'udp', '--dport', '53', '-j', 'REDIRECT', '--to-ports', '9053'])
+   subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '-p', 'udp', '-m', 'udp', '--dport', '53', '-j', 'REDIRECT', '--to-ports', '9053'])
    # Redirect to Transparent Proxy Tor (9040)
    subprocess.call(['iptables', '-t', 'nat', '-A', 'OUTPUT', '!', '-o', 'lo', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '-j', 'REDIRECT', '--to-ports', '9040'])
    subprocess.call(['iptables', '-t', 'filter', '-A', 'OUTPUT', '-p', 'tcp', '-m', 'owner', '!', '--uid-owner', '%s' % toruser, '-m', 'tcp', '--dport', '9040', '-j', 'ACCEPT'])
