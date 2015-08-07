@@ -24,7 +24,8 @@ def notify(title, message):
     Notify the given message with the notification system
     """
     if pynotify_available:
-        notice = pynotify.Notification(title, message, "/usr/share/pixmaps/anonymous.ico")
+        notice = pynotify.Notification(title, message, os.path.join(sys.prefix,
+                                                                    "share/pixmaps/anonymous.ico"))
         notice.show()
     return
 
@@ -81,7 +82,7 @@ class Icon(gtk.StatusIcon):
 
     def __init__(self):
         gtk.StatusIcon.__init__(self)
-        self.set_from_file('/usr/share/pixmaps/anonymous.ico')
+        self.set_from_file(os.path.join(sys.prefix, 'share/pixmaps/anonymous.ico'))
         self.connect("activate", self.load)
         self.connect("popup-menu", self.right_click_event)
         self.set_tooltip("TorTP")
@@ -129,7 +130,7 @@ class MainWindow(gtk.Window):
 
     def __init__(self):
         gtk.Window.__init__(self, gtk.WINDOW_TOPLEVEL)
-        self.set_icon_from_file('/usr/share/pixmaps/anonymous.ico')
+        self.set_icon_from_file(os.path.join(sys.prefix, 'share/pixmaps/anonymous.ico'))
 
         # Create the main menu
         menu_bar = gtk.MenuBar()
