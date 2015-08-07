@@ -19,7 +19,7 @@ import urllib
 import re
 from pwd import getpwnam, getpwuid
 
-TOR_USER = 'debian-tor'
+TOR_USER = os.environ.get('TOR_USER', 'debian-tor')
 
 def notify(title, message):
     """
