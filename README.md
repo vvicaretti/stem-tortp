@@ -28,7 +28,7 @@ Install GUI (optional):
 
 <code>apt-get install tortp-gtk</code>
 
-HowTo user TorTP:
+HowTo use TorTP:
 =================
 
 <code>$ sudo tortp -h</code>
