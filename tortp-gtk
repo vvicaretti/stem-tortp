@@ -299,7 +299,7 @@ Although TorBrowser is the best solution for web browsing, sometimes you want to
             self.refresh()
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
+                notify("TorTP", _("Unable to connect to port 6969 (%s)") % e)
             elif e.code == 2:
                 notify("TorTP", _("TorTP is already running"))
             elif e.code == 3:
@@ -315,7 +315,7 @@ Although TorBrowser is the best solution for web browsing, sometimes you want to
             notify("TorTP", _("New Tor circuit created"))
         except SystemExit as e:
             if e.code == 1:
-                notify("TorTP", _("Unable to connect to port 9051 (%s)") % e)
+                notify("TorTP", _("Unable to connect to port 6969 (%s)") % e)
             else:
                 notify("TorTP", _("Unable to change Tor circuit"))
         except:
