@@ -1,9 +1,10 @@
 TorTP
 ==========
 
-TorTP will change your iptables configuration to force all TCP traffic to pass through Tor (and also UDP DNS request). The network traffic that is not capable of passing through Tor (such as UDP or ICMP) is just dropped.
+TorTP changes the local iptables configuration in order to force all TCP traffic through Tor (and also UDP DNS requests).
+Other network traffic which is not capable of passing through Tor (such as UDP or ICMP) it is just dropped.
 
-TorTP use python-stem library for setup Transparen Proxy and DNS server capability on Tor, without override Tor default configuration file.
+TorTP is based on [stem](https://stem.torproject.org/), a python library which makes easier to enable embedded Transparen Proxy and DNS server capabilities in Tor.
 
 HowTo install:
 =============
@@ -31,6 +32,12 @@ Install GUI (optional):
 HowTo use TorTP:
 =================
 
+# cli
+
 <code>$ sudo tortp -h</code>
 
 <code>$ man tortp</code>
+
+# gui
+
+![gui_tortp](img/tortp.png)
